@@ -38,18 +38,16 @@ loginForm.addEventListener("submit", async function (event) {
       localStorage.setItem("user", JSON.stringify(result.user));
       localStorage.setItem("role", result.user.role);
 
-      loginMessage.textContent = "Login successful.";
+      const role = result.user.role;
+      const targetPage = role === "HOSPITAL" ? "hospital-dashboard.html" : 
+                         role === "DONOR" ? "donor-dashboard.html" : 
+                         role === "PATIENT" ? "patient-dashboard.html" : 
+                         "admin-dashboard.html";
+
+      loginMessage.innerHTML = `Login successful. <a href="${targetPage}" style="color: green; font-weight: bold; text-decoration: underline;">Click here to go to dashboard</a>`;
 
       // Redirect based on user role
-      const role = result.user.role;
-
-      if (role === "DONOR") {
-        window.location.href = "donor-dashboard.html";
-      } else if (role === "PATIENT") {
-        window.location.href = "patient-dashboard.html";
-      } else if (role === "ADMIN") {
-        window.location.href = "admin-dashboard.html";
-      }
+      window.location.href = targetPage;
     } else {
       if (result.message === "Please verify your email before logging in.") {
         loginMessage.innerHTML = `Please verify your email before logging in.<br><a href="register.html?email=${encodeURIComponent(email)}" style="color: #d9534f; font-weight: bold; text-decoration: underline; display: inline-block; margin-top: 10px;">Verify Now</a>`;

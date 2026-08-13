@@ -9,6 +9,14 @@ class Hospital(db.Model):
         primary_key=True
     )
 
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.user_id"),
+        nullable=False
+    )
+
+    user = db.relationship("User", backref=db.backref("hospital", uselist=False))
+
     hospital_name = db.Column(
         db.String(200),
         nullable=False
@@ -62,6 +70,7 @@ class Hospital(db.Model):
     def to_dict(self):
         return {
             "hospital_id": self.hospital_id,
+            "user_id": self.user_id,
             "hospital_name": self.hospital_name,
             "address": self.address,
             "latitude": self.latitude,

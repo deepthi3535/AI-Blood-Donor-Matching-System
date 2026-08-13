@@ -66,6 +66,8 @@
 
                 <option value="DONOR">Donor</option>
 
+                <option value="HOSPITAL">Hospital</option>
+
             </select>
 
             <!-- ================= DONOR FIELDS ================= -->
@@ -145,6 +147,30 @@
             </div>
 
             <!-- ================= END DONOR FIELDS ================= -->
+
+            <!-- ================= HOSPITAL FIELDS ================= -->
+            <div id="hospitalFields" style="display:none;">
+                <input
+                    type="text"
+                    id="hospital_address"
+                    placeholder="Hospital Address"
+                >
+                <button
+                    type="button"
+                    id="getHospitalLocation"
+                >
+                    Get Hospital Location (Required)
+                </button>
+                <input
+                    type="hidden"
+                    id="hospital_latitude"
+                >
+                <input
+                    type="hidden"
+                    id="hospital_longitude"
+                >
+            </div>
+            <!-- ================= END HOSPITAL FIELDS ================= -->
 
             <button type="submit">
 

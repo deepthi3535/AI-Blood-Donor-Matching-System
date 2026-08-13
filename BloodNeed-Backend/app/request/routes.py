@@ -11,6 +11,8 @@ from app import db
 
 from app.models.patient import Patient
 from app.models.donor_match import DonorMatch
+from app.models.hospital import Hospital
+from app.models.blood_inventory import BloodInventory, BloodInventoryTransaction
 
 from app.matching.services import find_matching_donors
 
@@ -190,16 +192,45 @@ def add_request():
         }), 400
 
     # ====================================================
-    # START AI MATCHING ONLY ONCE
+    # HOSPITAL BLOOD INVENTORY CHECK
     # ====================================================
+    if req.hospital_id:
+        inventory = BloodInventory.query.filter_by(
+            hospital_id=req.hospital_id,
+            blood_group=req.blood_group
+        ).with_for_update().first()
 
+        if inventory and inventory.available_units >= req.units_needed:
+            # Atomic subtraction
+            inventory.available_units -= req.units_needed
+            
+            # Save transaction
+            transaction = BloodInventoryTransaction(
+                inventory_id=inventory.inventory_id,
+                request_id=req.request_id,
+                transaction_type="FULFILLMENT",
+                units=req.units_needed
+            )
+            db.session.add(transaction)
+
+            # Mark request as Completed
+            req.status = "Completed"
+            db.session.commit()
+
+            return jsonify({
+                "message": f"Blood request fulfilled immediately from {req.hospital_name} stock!",
+                "success": True,
+                "request": req.to_dict()
+            }), 201
+
+    # ====================================================
+    # FALLBACK: START AI MATCHING
+    # ====================================================
     matches = find_matching_donors(req)
 
     if matches:
 
         req.status = "Matched"
-
-        matching_status = "Matched"
 
         message = (
             "Blood request created successfully. "
@@ -210,8 +241,6 @@ def add_request():
 
         req.status = "Pending"
 
-        matching_status = "Pending"
-
         message = (
             "Blood request created successfully, "
             "but no eligible donor was found."
@@ -219,17 +248,11 @@ def add_request():
 
     db.session.commit()
 
-    return jsonify({
+    response_data = req.to_dict()
+    response_data["message"] = message
+    response_data["donor_notified"] = len(matches) > 0
 
-        "message": message,
-
-        "request": req.to_dict(),
-
-        "matching_status": matching_status,
-
-        "donor_notified": len(matches) > 0
-
-    }), 201
+    return jsonify(response_data), 201
 
 
 # ====================================================

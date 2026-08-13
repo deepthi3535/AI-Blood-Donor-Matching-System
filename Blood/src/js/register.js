@@ -5,9 +5,10 @@ const API_URL = "http://127.0.0.1:5000";
 const registerForm = document.getElementById("registerForm");
 const role = document.getElementById("role");
 const donorFields = document.getElementById("donorFields");
+const hospitalFields = document.getElementById("hospitalFields");
 
 // =============================
-// SHOW / HIDE DONOR FIELDS
+// SHOW / HIDE ROLE SPECIFIC FIELDS
 // =============================
 console.log("ROLE EVENT ATTACHED");
 
@@ -15,17 +16,33 @@ role.addEventListener("change", function () {
   console.log("ROLE CHANGED:", role.value);
 
   const donorInputs = donorFields.querySelectorAll("input, select");
+  const hospitalInputs = hospitalFields.querySelectorAll("input");
 
   if (role.value === "DONOR") {
     donorFields.style.display = "block";
+    hospitalFields.style.display = "none";
 
     donorInputs.forEach((input) => (input.required = true));
+    hospitalInputs.forEach((input) => (input.required = false));
+  } else if (role.value === "HOSPITAL") {
+    donorFields.style.display = "none";
+    hospitalFields.style.display = "block";
+
+    donorInputs.forEach((input) => (input.required = false));
+    hospitalInputs.forEach((input) => (input.required = true));
   } else {
     donorFields.style.display = "none";
+    hospitalFields.style.display = "none";
 
     donorInputs.forEach((input) => {
       input.required = false;
+      if (input.type !== "hidden") {
+        input.value = "";
+      }
+    });
 
+    hospitalInputs.forEach((input) => {
+      input.required = false;
       if (input.type !== "hidden") {
         input.value = "";
       }
@@ -53,6 +70,27 @@ document.getElementById("getLocation").addEventListener("click", () => {
 
     () => {
       alert("Unable to fetch location");
+    },
+  );
+});
+
+// =============================
+// GET HOSPITAL LOCATION
+// =============================
+document.getElementById("getHospitalLocation").addEventListener("click", () => {
+  if (!navigator.geolocation) {
+    alert("Geolocation not supported.");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      document.getElementById("hospital_latitude").value = position.coords.latitude;
+      document.getElementById("hospital_longitude").value = position.coords.longitude;
+      alert("Hospital Location Captured Successfully");
+    },
+    () => {
+      alert("Unable to fetch hospital location");
     },
   );
 });
@@ -110,19 +148,38 @@ registerForm.addEventListener("submit", async (event) => {
 
 
     userData.availability = true;
-  if (
-    !userData.age ||
-    !userData.gender ||
-    isNaN(userData.weight) ||
-    userData.weight < 50 ||
-    !userData.blood_group ||
-    !userData.address ||
-    isNaN(userData.latitude) ||
-    isNaN(userData.longitude)
-  ) {
-    alert("Please fill all donor details. Weight must be at least 50 kg.");
-    return;
+    if (
+      !userData.age ||
+      !userData.gender ||
+      isNaN(userData.weight) ||
+      userData.weight < 50 ||
+      !userData.blood_group ||
+      !userData.address ||
+      isNaN(userData.latitude) ||
+      isNaN(userData.longitude)
+    ) {
+      alert("Please fill all donor details. Weight must be at least 50 kg.");
+      return;
+    }
   }
+
+  // =============================
+  // HOSPITAL EXTRA DATA
+  // =============================
+  if (role.value === "HOSPITAL") {
+    userData.address = document.getElementById("hospital_address").value.trim();
+    userData.latitude = parseFloat(document.getElementById("hospital_latitude").value);
+    userData.longitude = parseFloat(document.getElementById("hospital_longitude").value);
+    userData.hospital_name = full_name;
+
+    if (
+      !userData.address ||
+      isNaN(userData.latitude) ||
+      isNaN(userData.longitude)
+    ) {
+      alert("Please enter the hospital address and capture its location.");
+      return;
+    }
   }
 
   console.log(userData);
@@ -145,7 +202,7 @@ registerForm.addEventListener("submit", async (event) => {
     const result = await response.json();
 
     if (response.ok) {
-      if (userData.role === "DONOR" || userData.role === "PATIENT") {
+      if (userData.role === "DONOR" || userData.role === "PATIENT" || userData.role === "HOSPITAL") {
         alert(result.message || "Registration successful. Please verify your email.");
         document.getElementById("registerCard").style.display = "none";
         document.getElementById("otpSection").style.display = "block";

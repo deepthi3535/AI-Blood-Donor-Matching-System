@@ -15,10 +15,19 @@ class BloodRequest(db.Model):
         nullable=False
     )
 
+    hospital_id = db.Column(
+        db.Integer,
+        db.ForeignKey("hospitals.hospital_id"),
+        nullable=True
+    )
+
     blood_group = db.Column(
         db.String(5),
         nullable=False
     )
+
+    # Relationship back to Hospital
+    hospital = db.relationship("Hospital", backref=db.backref("requests", lazy=True))
 
     units_needed = db.Column(
         db.Integer,
@@ -87,6 +96,7 @@ class BloodRequest(db.Model):
         return {
             "request_id": self.request_id,
             "patient_id": self.patient_id,
+            "hospital_id": self.hospital_id,
             "blood_group": self.blood_group,
             "units_needed": self.units_needed,
             "emergency_level": self.emergency_level,

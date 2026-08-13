@@ -29,10 +29,18 @@ def create_request(data):
     # ---------------------------------------------
     # CREATE BLOOD REQUEST
     # ---------------------------------------------
+    from app.models.hospital import Hospital
+    hospital_id = data.get("hospital_id")
+    if not hospital_id and data.get("hospital_name"):
+        hospital = Hospital.query.filter(db.func.lower(Hospital.hospital_name) == data["hospital_name"].lower().strip()).first()
+        if hospital:
+            hospital_id = hospital.hospital_id
 
     blood_request = BloodRequest(
 
         patient_id=data["patient_id"],
+
+        hospital_id=hospital_id,
 
         blood_group=data["blood_group"],
 

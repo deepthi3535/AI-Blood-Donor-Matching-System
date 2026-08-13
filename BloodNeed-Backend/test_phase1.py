@@ -17,6 +17,8 @@ from app.models.donation import Donation
 from app.models.badge import Badge
 from app.models.reward_point import RewardPoint
 from app.models.email_verification import EmailVerification
+from app.models.hospital import Hospital
+from app.models.blood_inventory import BloodInventory, BloodInventoryTransaction
 
 app = create_app()
 
@@ -31,9 +33,12 @@ def setup_test_data():
     db.session.query(Donation).delete()
     db.session.query(Badge).delete()
     db.session.query(RewardPoint).delete()
+    db.session.query(BloodInventoryTransaction).delete()
+    db.session.query(BloodInventory).delete()
     db.session.query(BloodRequest).delete()
     db.session.query(Donor).delete()
     db.session.query(Patient).delete()
+    db.session.query(Hospital).delete()
     db.session.query(User).filter(User.email.like("test_%")).delete()
     db.session.commit()
 

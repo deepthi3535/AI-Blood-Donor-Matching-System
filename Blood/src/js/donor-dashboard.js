@@ -496,7 +496,7 @@ km
                         <p>
 
                             <strong>
-                                Response Probability:
+                                Response Likelihood (Rule-based):
                             </strong>
 
                             ${request.response_probability || 0}%

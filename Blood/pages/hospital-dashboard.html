@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Dashboard - BloodNeed</title>
+    <link rel="stylesheet" href="../src/assets/css/common.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <style>
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .inventory-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            text-align: center;
+            position: relative;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .inventory-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+        }
+        .blood-type {
+            font-size: 32px;
+            font-weight: 700;
+            color: #d9534f;
+            margin-bottom: 8px;
+        }
+        .stock-units {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+        .stock-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-sufficient {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-low {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .status-empty {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .adjust-section {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            margin-top: 30px;
+        }
+        .adjust-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) auto;
+            gap: 15px;
+            align-items: end;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+        }
+        .form-group select, .form-group input {
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+        }
+        .update-btn {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .update-btn:hover {
+            background-color: #c9302c;
+        }
+        .profile-container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            margin-bottom: 25px;
+        }
+        .profile-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .info-item {
+            font-size: 14px;
+            color: #666;
+        }
+        .info-item strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div>
+            <h1>🩸 BloodNeed Hospital Dashboard</h1>
+            <p>Manage blood stock levels and direct fulfillment</p>
+        </div>
+        <div class="header-actions">
+            <button id="logoutBtn" class="outline-button">Logout</button>
+        </div>
+    </header>
+
+    <!-- Profile Info -->
+    <section class="profile-container">
+        <h2>Hospital Details</h2>
+        <div id="hospitalInfo" class="profile-info">
+            <div class="info-item">Loading details...</div>
+        </div>
+    </section>
+
+    <!-- Inventory Section -->
+    <section class="inventory-section">
+        <div class="section-header">
+            <h2>Current Blood Stock</h2>
+            <span class="info-item" id="lastUpdated">Last updated: Never</span>
+        </div>
+        <div id="inventoryContainer" class="inventory-grid">
+            <!-- Dynamic inventory cards will be loaded here -->
+        </div>
+    </section>
+
+    <!-- Adjust Stock Section -->
+    <section class="adjust-section">
+        <h2>Update Blood Stock Levels</h2>
+        <form id="adjustForm" class="adjust-form">
+            <div class="form-group">
+                <label for="bloodGroup">Blood Group</label>
+                <select id="bloodGroup" required>
+                    <option value="" disabled selected>Select Group</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="units">Units</label>
+                <input type="number" id="units" min="1" step="1" required placeholder="e.g. 5">
+            </div>
+            <div class="form-group">
+                <label for="operation">Operation</label>
+                <select id="operation" required>
+                    <option value="add">Add Stock</option>
+                    <option value="remove">Remove Stock</option>
+                </select>
+            </div>
+            <button type="submit" class="update-btn">Update Inventory</button>
+        </form>
+        <p id="formMessage" style="margin-top: 15px; font-weight: 500; text-align: center;"></p>
+    </section>
+</div>
+
+<script src="../src/js/hospital-dashboard.js"></script>
+</body>
+</html>

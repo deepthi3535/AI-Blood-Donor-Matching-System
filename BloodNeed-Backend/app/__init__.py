@@ -41,6 +41,7 @@ def create_app():
 
     from app.auth.routes import auth_bp
     from app.admin.routes import admin_bp
+    from app.hospital.routes import hospital_bp
 
     from app.donor.routes import donor_bp
 
@@ -79,6 +80,7 @@ def create_app():
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(hospital_bp)
 
     app.register_blueprint(donor_bp)
 

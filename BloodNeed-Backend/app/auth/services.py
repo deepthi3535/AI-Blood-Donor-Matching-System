@@ -8,6 +8,7 @@ from app.models.donor import Donor
 from app.models.patient import Patient
 from app.models.user import User
 from app.models.email_verification import EmailVerification
+from app.models.hospital import Hospital
 from app.utils.email_service import generate_secure_otp, send_otp_email
 
 
@@ -28,7 +29,7 @@ def register_user(data):
 
     role = data.get("role", "PATIENT").upper()
 
-    if role not in ["ADMIN", "DONOR", "PATIENT"]:
+    if role not in ["ADMIN", "DONOR", "PATIENT", "HOSPITAL"]:
         return {
             "success": False,
             "message": "Invalid role."
@@ -97,9 +98,29 @@ def register_user(data):
 
             db.session.add(patient)
 
+        # ---------------- HOSPITAL ----------------
+
+        if role == "HOSPITAL":
+
+            hospital = Hospital(
+                user_id=user.user_id,
+                hospital_name=data.get("hospital_name") or data["full_name"],
+                address=data.get("address", "Hospital Address"),
+                latitude=data.get("latitude", 0.0),
+                longitude=data.get("longitude", 0.0),
+                phone=data.get("phone"),
+                email=data.get("email"),
+                city=data.get("city"),
+                state=data.get("state"),
+                pincode=data.get("pincode"),
+                is_active=True
+            )
+
+            db.session.add(hospital)
+
         # ---------------- EMAIL VERIFICATION ----------------
 
-        if role in ["DONOR", "PATIENT"]:
+        if role in ["DONOR", "PATIENT", "HOSPITAL"]:
             otp = generate_secure_otp()
             otp_hash = hash_password(otp)
 
@@ -118,7 +139,7 @@ def register_user(data):
 
         return {
             "success": True,
-            "message": "Registration successful. Please verify your email." if role in ["DONOR", "PATIENT"] else "Registration Successful."
+            "message": "Registration successful. Please verify your email." if role in ["DONOR", "PATIENT", "HOSPITAL"] else "Registration Successful."
         }
     except Exception as e:
         db.session.rollback()
@@ -149,7 +170,7 @@ def login_user(data):
             "message": "Invalid Email."
         }
 
-    if user.role in ["DONOR", "PATIENT"] and not user.email_verified:
+    if user.role in ["DONOR", "PATIENT", "HOSPITAL"] and not user.email_verified:
         return {
             "success": False,
             "message": "Please verify your email before logging in."

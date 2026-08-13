@@ -191,40 +191,40 @@ async function loadMyRequests() {
                         </p>
 
 
-                        <p>
+                         <p>
 
-                          <strong>
+                           <strong>
 
-                            Ranking Score
+                             Priority Score (Rule-based)
 
-                          </strong>
-
-
-                          <span>
-
-                            ${rankingScore}
-
-                          </span>
-
-                        </p>
+                           </strong>
 
 
-                        <p>
+                           <span>
 
-                          <strong>
+                             ${rankingScore}
 
-                            Response Probability
+                           </span>
 
-                          </strong>
+                         </p>
 
 
-                          <span>
+                         <p>
 
-                            ${responseProbability}
+                           <strong>
 
-                          </span>
+                             Response Likelihood (Rule-based)
 
-                        </p>
+                           </strong>
+
+
+                           <span>
+
+                             ${responseProbability}
+
+                           </span>
+
+                         </p>
 
 
                       </div>

@@ -36,7 +36,8 @@ class User(db.Model):
         db.Enum(
             "ADMIN",
             "DONOR",
-            "PATIENT"
+            "PATIENT",
+            "HOSPITAL"
         ),
         nullable=False,
         default="PATIENT"

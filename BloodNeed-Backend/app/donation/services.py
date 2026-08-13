@@ -11,6 +11,7 @@ from app.reward.services import add_reward
 from app.models.patient import Patient
 from app.models.donor_match import DonorMatch
 from app.notifications.services import create_notification
+from app.models.blood_inventory import BloodInventory, BloodInventoryTransaction
 
 
 def create_donation(data):
@@ -171,6 +172,40 @@ def create_donation(data):
 
     if match:
         match.donor_response = "Accepted"
+
+    # ==========================================
+    # Update Hospital Inventory
+    # ==========================================
+    if blood_request.hospital_id:
+        inventory = BloodInventory.query.filter_by(
+            hospital_id=blood_request.hospital_id,
+            blood_group=blood_request.blood_group
+        ).with_for_update().first()
+
+        if not inventory:
+            inventory = BloodInventory(
+                hospital_id=blood_request.hospital_id,
+                blood_group=blood_request.blood_group,
+                available_units=0
+            )
+            db.session.add(inventory)
+            db.session.flush()
+
+        # Idempotency check: Ensure we don't duplicate inventory addition
+        existing_tx = BloodInventoryTransaction.query.filter_by(
+            request_id=request_id,
+            transaction_type="ADD"
+        ).first()
+
+        if not existing_tx:
+            inventory.available_units += units_donated
+            transaction = BloodInventoryTransaction(
+                inventory_id=inventory.inventory_id,
+                request_id=request_id,
+                transaction_type="ADD",
+                units=units_donated
+            )
+            db.session.add(transaction)
 
     # ==========================================
     # Add Reward Points

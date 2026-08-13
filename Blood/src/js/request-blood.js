@@ -255,7 +255,7 @@ try {
 
 
   requestMessage.textContent =
-    "Blood request created successfully!";
+    result.message || "Blood request created successfully!";
 
   requestMessage.style.color =
     "green";
