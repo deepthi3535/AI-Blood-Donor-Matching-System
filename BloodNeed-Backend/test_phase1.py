@@ -16,6 +16,7 @@ from app.models.notification import Notification
 from app.models.donation import Donation
 from app.models.badge import Badge
 from app.models.reward_point import RewardPoint
+from app.models.email_verification import EmailVerification
 
 app = create_app()
 
@@ -23,6 +24,7 @@ def setup_test_data():
     print("Setting up test database state...")
     
     # Clean previous test entries in correct foreign key order
+    db.session.query(EmailVerification).delete()
     db.session.query(Notification).delete()
     db.session.query(ResponseHistory).delete()
     db.session.query(DonorMatch).delete()
@@ -36,19 +38,19 @@ def setup_test_data():
     db.session.commit()
 
     # 1. Create Users
-    patient_user = User(full_name="Test Patient", email="test_patient@example.com", phone="1111111111", role="PATIENT", active=True)
+    patient_user = User(full_name="Test Patient", email="test_patient@example.com", phone="1111111111", role="PATIENT", active=True, email_verified=True)
     patient_user.password = "password"
     
-    other_patient_user = User(full_name="Test Patient 2", email="test_patient2@example.com", phone="1111111112", role="PATIENT", active=True)
+    other_patient_user = User(full_name="Test Patient 2", email="test_patient2@example.com", phone="1111111112", role="PATIENT", active=True, email_verified=True)
     other_patient_user.password = "password"
 
-    donor_user_1 = User(full_name="Test Donor 1", email="test_donor1@example.com", phone="2222222222", role="DONOR", active=True)
+    donor_user_1 = User(full_name="Test Donor 1", email="test_donor1@example.com", phone="2222222222", role="DONOR", active=True, email_verified=True)
     donor_user_1.password = "password"
 
-    donor_user_2 = User(full_name="Test Donor 2", email="test_donor2@example.com", phone="3333333333", role="DONOR", active=True)
+    donor_user_2 = User(full_name="Test Donor 2", email="test_donor2@example.com", phone="3333333333", role="DONOR", active=True, email_verified=True)
     donor_user_2.password = "password"
 
-    donor_user_inactive = User(full_name="Test Donor Inactive", email="test_donor_inactive@example.com", phone="4444444444", role="DONOR", active=False)
+    donor_user_inactive = User(full_name="Test Donor Inactive", email="test_donor_inactive@example.com", phone="4444444444", role="DONOR", active=False, email_verified=True)
     donor_user_inactive.password = "password"
 
     db.session.add_all([patient_user, other_patient_user, donor_user_1, donor_user_2, donor_user_inactive])

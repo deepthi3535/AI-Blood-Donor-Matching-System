@@ -145,9 +145,16 @@ registerForm.addEventListener("submit", async (event) => {
     const result = await response.json();
 
     if (response.ok) {
-      alert(result.message);
-
-      window.location.href = "login.html";
+      if (userData.role === "DONOR" || userData.role === "PATIENT") {
+        alert(result.message || "Registration successful. Please verify your email.");
+        document.getElementById("registerCard").style.display = "none";
+        document.getElementById("otpSection").style.display = "block";
+        document.getElementById("otpEmailDisplay").textContent = userData.email;
+        startResendCooldown();
+      } else {
+        alert(result.message);
+        window.location.href = "login.html";
+      }
     } else {
       alert(result.message);
     }
@@ -157,3 +164,91 @@ registerForm.addEventListener("submit", async (event) => {
     alert("Unable to connect backend.");
   }
 });
+
+// =============================
+// OTP VERIFICATION STATE
+// =============================
+let cooldownTime = 0;
+let cooldownInterval = null;
+
+function startResendCooldown() {
+  const resendBtn = document.getElementById("resendOtpBtn");
+  const timerMsg = document.getElementById("resendTimerMessage");
+
+  cooldownTime = 60;
+  resendBtn.disabled = true;
+  resendBtn.style.opacity = "0.5";
+  resendBtn.style.cursor = "not-allowed";
+
+  if (cooldownInterval) clearInterval(cooldownInterval);
+
+  cooldownInterval = setInterval(() => {
+    cooldownTime--;
+    if (cooldownTime <= 0) {
+      clearInterval(cooldownInterval);
+      resendBtn.disabled = false;
+      resendBtn.style.opacity = "1";
+      resendBtn.style.cursor = "pointer";
+      timerMsg.textContent = "";
+    } else {
+      timerMsg.textContent = `Resend available in ${cooldownTime} seconds.`;
+    }
+  }, 1000);
+}
+
+document.getElementById("otpForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const otp = document.getElementById("otpCode").value.trim();
+  const email = document.getElementById("otpEmailDisplay").textContent.trim();
+
+  try {
+    const response = await fetch(`${API_URL}/api/auth/verify-email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp })
+    });
+    const result = await response.json();
+    if (response.ok) {
+      alert(result.message || "Email verified successfully!");
+      window.location.href = "login.html";
+    } else {
+      alert(result.message || "Invalid OTP.");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Unable to verify OTP.");
+  }
+});
+
+document.getElementById("resendOtpBtn").addEventListener("click", async () => {
+  if (cooldownTime > 0) return;
+  const email = document.getElementById("otpEmailDisplay").textContent.trim();
+
+  try {
+    const response = await fetch(`${API_URL}/api/auth/resend-otp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email })
+    });
+    const result = await response.json();
+    if (response.ok) {
+      alert(result.message || "New OTP sent!");
+      startResendCooldown();
+    } else {
+      alert(result.message || "Failed to resend OTP.");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Unable to resend OTP.");
+  }
+});
+
+// Check if email query parameter is present on page load
+const urlParams = new URLSearchParams(window.location.search);
+const verifyEmailParam = urlParams.get("email");
+if (verifyEmailParam) {
+  document.getElementById("registerCard").style.display = "none";
+  document.getElementById("otpSection").style.display = "block";
+  document.getElementById("otpEmailDisplay").textContent = verifyEmailParam.trim();
+  startResendCooldown();
+}

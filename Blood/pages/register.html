@@ -17,7 +17,7 @@
 
 <div class="container">
 
-    <div class="card">
+    <div class="card" id="registerCard">
 
         <h1>AI Blood Donor System</h1>
 
@@ -164,8 +164,36 @@
 
             </a>
 
-        </p>
+    </div>
 
+    <!-- ================= OTP VERIFICATION SECTION ================= -->
+    <div class="card" id="otpSection" style="display: none;">
+        <h1>AI Blood Donor System</h1>
+        <h2>Verify Email</h2>
+        <p style="margin-bottom: 20px; color: #666;">
+            We have sent a 6-digit OTP code to: <br>
+            <strong id="otpEmailDisplay" style="color: #d9534f;"></strong>
+        </p>
+        <form id="otpForm">
+            <input
+                type="text"
+                id="otpCode"
+                placeholder="Enter 6-digit OTP"
+                maxLength="6"
+                required
+                style="letter-spacing: 5px; text-align: center; font-size: 1.2em;"
+            >
+            <button type="submit" class="primary-button" style="margin-top: 15px;">Verify Email</button>
+        </form>
+        <div style="margin-top: 20px; text-align: center;">
+            <button type="button" id="resendOtpBtn" style="background-color: #6c757d; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">
+                Resend OTP
+            </button>
+            <p id="resendTimerMessage" style="font-size: 0.9em; margin-top: 8px; color: #666;"></p>
+        </div>
+        <p style="margin-top: 20px; font-size: 0.95em;">
+            <a href="login.html" style="color: #d9534f; text-decoration: none; font-weight: bold;">Back to Login</a>
+        </p>
     </div>
 
 </div>

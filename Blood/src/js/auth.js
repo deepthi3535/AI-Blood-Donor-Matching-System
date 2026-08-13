@@ -51,8 +51,12 @@ loginForm.addEventListener("submit", async function (event) {
         window.location.href = "admin-dashboard.html";
       }
     } else {
-      loginMessage.textContent =
-        result.message || `Login failed (${response.status})`;
+      if (result.message === "Please verify your email before logging in.") {
+        loginMessage.innerHTML = `Please verify your email before logging in.<br><a href="register.html?email=${encodeURIComponent(email)}" style="color: #d9534f; font-weight: bold; text-decoration: underline; display: inline-block; margin-top: 10px;">Verify Now</a>`;
+      } else {
+        loginMessage.textContent =
+          result.message || `Login failed (${response.status})`;
+      }
     }
   } catch (error) {
     console.error("Login Error:", error);

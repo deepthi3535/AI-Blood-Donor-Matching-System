@@ -1,11 +1,14 @@
 from flask import jsonify
 from werkzeug.security import generate_password_hash
 
+from datetime import datetime, timedelta
 from app import db
 from app.auth.utils import hash_password, verify_password, generate_token
 from app.models.donor import Donor
 from app.models.patient import Patient
 from app.models.user import User
+from app.models.email_verification import EmailVerification
+from app.utils.email_service import generate_secure_otp, send_otp_email
 
 
 def register_user(data):
@@ -47,13 +50,16 @@ def register_user(data):
 
         # ---------------- USER ----------------
 
+        email_verified = (role == "ADMIN")
+
         user = User(
             full_name=data["full_name"],
             email=data["email"],
             phone=data["phone"],
             password=hash_password(data["password"]),
             role=role,
-            active=True
+            active=True,
+            email_verified=email_verified
         )
 
         db.session.add(user)
@@ -91,11 +97,28 @@ def register_user(data):
 
             db.session.add(patient)
 
+        # ---------------- EMAIL VERIFICATION ----------------
+
+        if role in ["DONOR", "PATIENT"]:
+            otp = generate_secure_otp()
+            otp_hash = hash_password(otp)
+
+            verification = EmailVerification(
+                user_id=user.user_id,
+                email=user.email,
+                otp_hash=otp_hash,
+                expires_at=datetime.utcnow() + timedelta(minutes=5),
+                attempts=0,
+                verified=False
+            )
+            db.session.add(verification)
+            send_otp_email(user.email, otp)
+
         db.session.commit()
 
         return {
             "success": True,
-            "message": "Registration Successful."
+            "message": "Registration successful. Please verify your email." if role in ["DONOR", "PATIENT"] else "Registration Successful."
         }
     except Exception as e:
         db.session.rollback()
@@ -124,6 +147,12 @@ def login_user(data):
         return {
             "success": False,
             "message": "Invalid Email."
+        }
+
+    if user.role in ["DONOR", "PATIENT"] and not user.email_verified:
+        return {
+            "success": False,
+            "message": "Please verify your email before logging in."
         }
 
     if not verify_password(

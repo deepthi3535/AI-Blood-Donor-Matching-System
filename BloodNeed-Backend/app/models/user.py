@@ -47,6 +47,12 @@ class User(db.Model):
         default=True
     )
 
+    email_verified = db.Column(
+        db.Boolean,
+        default=False,
+        nullable=False
+    )
+
     # =========================
     # Convert to Dictionary
     # =========================
@@ -65,7 +71,9 @@ class User(db.Model):
 
             "role": self.role,
 
-            "active": self.active
+            "active": self.active,
+
+            "email_verified": self.email_verified
 
         }
     
