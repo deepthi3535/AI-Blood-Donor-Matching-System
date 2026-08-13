@@ -223,6 +223,89 @@ def add_request():
                 "request": req.to_dict()
             }), 201
 
+        # ---------------------------------------------
+        # Phase 4 Layer: Search Nearby Hospitals
+        # ---------------------------------------------
+        from app.models.hospital import Hospital
+        from app.models.hospital_transfer import HospitalTransfer
+        from app.ai.ranking import calculate_distance
+        from app.notifications.services import create_notification
+
+        def get_transfer_radius(emergency_level):
+            lvl = emergency_level.upper()
+            if lvl == "CRITICAL":
+                return 50.0
+            if lvl == "HIGH":
+                return 30.0
+            if lvl == "MEDIUM":
+                return 20.0
+            return 10.0
+
+        radius = get_transfer_radius(req.emergency_level)
+        nearby_hospitals = []
+        
+        all_hospitals = Hospital.query.filter_by(is_active=True).all()
+        for h in all_hospitals:
+            if h.hospital_id == req.hospital_id:
+                continue
+            if h.latitude is None or h.longitude is None:
+                continue
+            if req.hospital_latitude is None or req.hospital_longitude is None:
+                continue
+                
+            dist = calculate_distance(req.hospital_latitude, req.hospital_longitude, h.latitude, h.longitude)
+            if dist <= radius:
+                # Check inventory of exact requested blood group
+                inv = BloodInventory.query.filter_by(hospital_id=h.hospital_id, blood_group=req.blood_group).first()
+                if inv and inv.available_units >= req.units_needed:
+                    nearby_hospitals.append((h, dist))
+
+        # Sort by distance (closest first)
+        nearby_hospitals.sort(key=lambda x: x[1])
+
+        if nearby_hospitals:
+            best_hosp, best_dist = nearby_hospitals[0]
+            
+            # Create PENDING transfer request
+            transfer = HospitalTransfer(
+                request_id=req.request_id,
+                source_hospital_id=best_hosp.hospital_id,
+                destination_hospital_id=req.hospital_id,
+                blood_group=req.blood_group,
+                units_requested=req.units_needed,
+                distance_km=best_dist,
+                status="PENDING"
+            )
+            db.session.add(transfer)
+            
+            # Request status remains Pending (gated from matches because of active pending transfer)
+            req.status = "Pending"
+            db.session.commit()
+            
+            # Notify source hospital
+            create_notification({
+                "user_id": best_hosp.user.user_id,
+                "message": f"New transfer request: {req.units_needed} units of {req.blood_group} for {req.hospital_name}.",
+                "type": "WARNING",
+                "is_read": False,
+                "related_request_id": req.request_id
+            })
+            
+            # Notify patient
+            create_notification({
+                "user_id": patient.user_id,
+                "message": f"Inventory unavailable. Sourcing {req.blood_group} blood from nearby hospital {best_hosp.hospital_name}.",
+                "type": "INFO",
+                "is_read": False,
+                "related_request_id": req.request_id
+            })
+
+            response_data = req.to_dict()
+            response_data["message"] = f"Inventory unavailable. Transfer requested from nearby hospital {best_hosp.hospital_name} ({round(best_dist, 2)} km away)."
+            response_data["success"] = True
+            response_data["transfer"] = transfer.to_dict()
+            return jsonify(response_data), 201
+
     # ====================================================
     # FALLBACK: START AI MATCHING
     # ====================================================
@@ -517,6 +600,15 @@ def cancel_request(request_id):
         "donor_response":
             "Rejected"
 
+    })
+
+    # Cancel all pending transfers
+    from app.models.hospital_transfer import HospitalTransfer
+    HospitalTransfer.query.filter_by(
+        request_id=req.request_id,
+        status="PENDING"
+    ).update({
+        "status": "CANCELLED"
     })
 
     db.session.commit()

@@ -42,6 +42,7 @@ class TestPhase3Inventory(unittest.TestCase):
         # Disable SMTP real email sending in tests
         os.environ["EMAIL_VERIFICATION_DEV_MODE"] = "true"
 
+        from app.models.hospital_transfer import HospitalTransfer
         # Clear test data in correct foreign key order
         db.session.query(Notification).delete()
         db.session.query(ResponseHistory).delete()
@@ -49,13 +50,14 @@ class TestPhase3Inventory(unittest.TestCase):
         db.session.query(Donation).delete()
         db.session.query(Badge).delete()
         db.session.query(RewardPoint).delete()
+        db.session.query(HospitalTransfer).delete()
         db.session.query(BloodInventoryTransaction).delete()
         db.session.query(BloodInventory).delete()
         db.session.query(BloodRequest).delete()
         db.session.query(Donor).delete()
         db.session.query(Patient).delete()
         db.session.query(Hospital).delete()
-        db.session.query(User).filter(User.email.like("test_p3_%")).delete()
+        db.session.query(User).filter(User.email.like("test_%")).delete()
         db.session.commit()
 
         # Seed Test Users

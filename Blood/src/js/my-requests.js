@@ -268,14 +268,33 @@ ${bloodRequest.hospital_longitude}
 
               .join("")
           : `
-
               <p class="no-donors">
-
                 No matched donors yet.
-
               </p>
-
             `;
+
+      const activeTransfer = bloodRequest.transfers && bloodRequest.transfers.find(t => t.status === "PENDING" || t.status === "APPROVED");
+      let matchedSectionContent = "";
+
+      if (activeTransfer) {
+        matchedSectionContent = `
+          <div class="donor-card" style="border-left: 4px solid #f0ad4e; background-color: #fcf8e3; padding: 15px; border-radius: 8px; margin-top: 10px;">
+            <div class="donor-card-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #faebcc; padding-bottom: 8px; margin-bottom: 10px;">
+              <h4 style="margin: 0; color: #8a6d3b;">🏥 Hospital Transfer Sourced</h4>
+              <span class="response-status ${activeTransfer.status === 'APPROVED' ? 'accepted' : 'pending'}" style="padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase;">
+                ${activeTransfer.status}
+              </span>
+            </div>
+            <div class="donor-details" style="display: flex; flex-direction: column; gap: 6px;">
+              <p style="margin: 0; font-size: 13px;"><strong>Providing Hospital:</strong> <span style="float: right; font-weight: 600;">${activeTransfer.source_hospital_name}</span></p>
+              <p style="margin: 0; font-size: 13px;"><strong>Distance:</strong> <span style="float: right; font-weight: 600;">${activeTransfer.distance_km} km</span></p>
+              <p style="margin: 0; font-size: 13px;"><strong>Units:</strong> <span style="float: right; font-weight: 600;">${activeTransfer.units_requested} units of ${activeTransfer.blood_group}</span></p>
+            </div>
+          </div>
+        `;
+      } else {
+        matchedSectionContent = donorsHTML;
+      }
 
       // =================================================
       // REQUEST CARD
@@ -450,8 +469,7 @@ ${bloodRequest.hospital_longitude}
           </div>
 
 
-          ${donorsHTML}
-
+          ${matchedSectionContent}
 
         </div>
 

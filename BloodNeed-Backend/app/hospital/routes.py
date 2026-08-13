@@ -193,3 +193,192 @@ def get_hospitals():
     """
     all_hospitals = Hospital.query.filter_by(is_active=True).all()
     return jsonify([h.to_dict() for h in all_hospitals]), 200
+
+
+# ==========================================
+# GET INCOMING TRANSFERS
+# ==========================================
+
+@hospital_bp.route("/transfers/incoming", methods=["GET"])
+@jwt_required()
+@role_required("HOSPITAL")
+def get_incoming_transfers():
+    user_id = get_jwt_identity()
+    hospital = Hospital.query.filter_by(user_id=user_id).first()
+    if not hospital:
+        return jsonify({"success": False, "message": "Hospital profile not found."}), 404
+        
+    from app.models.hospital_transfer import HospitalTransfer
+    transfers = HospitalTransfer.query.filter_by(source_hospital_id=hospital.hospital_id).order_by(HospitalTransfer.created_at.desc()).all()
+    
+    return jsonify({
+        "success": True,
+        "transfers": [t.to_dict() for t in transfers]
+    }), 200
+
+
+# ==========================================
+# GET OUTGOING TRANSFERS
+# ==========================================
+
+@hospital_bp.route("/transfers/outgoing", methods=["GET"])
+@jwt_required()
+@role_required("HOSPITAL")
+def get_outgoing_transfers():
+    user_id = get_jwt_identity()
+    hospital = Hospital.query.filter_by(user_id=user_id).first()
+    if not hospital:
+        return jsonify({"success": False, "message": "Hospital profile not found."}), 404
+        
+    from app.models.hospital_transfer import HospitalTransfer
+    transfers = HospitalTransfer.query.filter_by(destination_hospital_id=hospital.hospital_id).order_by(HospitalTransfer.created_at.desc()).all()
+    
+    return jsonify({
+        "success": True,
+        "transfers": [t.to_dict() for t in transfers]
+    }), 200
+
+
+# ==========================================
+# POST APPROVE TRANSFER
+# ==========================================
+
+@hospital_bp.route("/transfers/<int:transfer_id>/approve", methods=["POST"])
+@jwt_required()
+@role_required("HOSPITAL")
+def approve_transfer(transfer_id):
+    user_id = get_jwt_identity()
+    hospital = Hospital.query.filter_by(user_id=user_id).first()
+    if not hospital:
+        return jsonify({"success": False, "message": "Hospital profile not found."}), 404
+        
+    from app.models.hospital_transfer import HospitalTransfer
+    transfer = HospitalTransfer.query.filter_by(transfer_id=transfer_id, source_hospital_id=hospital.hospital_id).first()
+    if not transfer:
+        return jsonify({"success": False, "message": "Transfer request not found."}), 404
+        
+    if transfer.status != "PENDING":
+        return jsonify({"success": False, "message": f"Cannot approve transfer with status: {transfer.status}"}), 400
+        
+    # Lock source inventory row
+    inventory = BloodInventory.query.filter_by(
+        hospital_id=hospital.hospital_id,
+        blood_group=transfer.blood_group
+    ).with_for_update().first()
+    
+    if not inventory or inventory.available_units < transfer.units_requested:
+        return jsonify({"success": False, "message": "Insufficient stock to fulfill transfer."}), 400
+        
+    try:
+        # Deduct units from source
+        inventory.available_units -= transfer.units_requested
+        
+        # Update transfer status
+        transfer.status = "APPROVED"
+        
+        # Update blood request status
+        blood_request = transfer.blood_request
+        blood_request.status = "Completed"
+        
+        # Record source inventory transaction history
+        transaction = BloodInventoryTransaction(
+            inventory_id=inventory.inventory_id,
+            request_id=blood_request.request_id,
+            transaction_type="REMOVE",
+            units=transfer.units_requested
+        )
+        db.session.add(transaction)
+        
+        # Send Notification to patient
+        from app.notifications.services import create_notification
+        create_notification({
+            "user_id": blood_request.patient.user_id,
+            "message": f"Your request for {blood_request.blood_group} has been fulfilled via transfer from {hospital.hospital_name}.",
+            "type": "SUCCESS",
+            "is_read": False,
+            "related_request_id": blood_request.request_id
+        })
+        
+        # Send Notification to destination hospital (requestor)
+        create_notification({
+            "user_id": blood_request.hospital.user.user_id,
+            "message": f"Hospital {hospital.hospital_name} approved the transfer of {transfer.units_requested} units of {transfer.blood_group}.",
+            "type": "SUCCESS",
+            "is_read": False,
+            "related_request_id": blood_request.request_id
+        })
+        
+        db.session.commit()
+        return jsonify({
+            "success": True,
+            "message": "Transfer approved and completed successfully.",
+            "transfer": transfer.to_dict()
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+# ==========================================
+# POST REJECT TRANSFER
+# ==========================================
+
+@hospital_bp.route("/transfers/<int:transfer_id>/reject", methods=["POST"])
+@jwt_required()
+@role_required("HOSPITAL")
+def reject_transfer(transfer_id):
+    user_id = get_jwt_identity()
+    hospital = Hospital.query.filter_by(user_id=user_id).first()
+    if not hospital:
+        return jsonify({"success": False, "message": "Hospital profile not found."}), 404
+        
+    from app.models.hospital_transfer import HospitalTransfer
+    transfer = HospitalTransfer.query.filter_by(transfer_id=transfer_id, source_hospital_id=hospital.hospital_id).first()
+    if not transfer:
+        return jsonify({"success": False, "message": "Transfer request not found."}), 404
+        
+    if transfer.status != "PENDING":
+        return jsonify({"success": False, "message": f"Cannot reject transfer with status: {transfer.status}"}), 400
+        
+    try:
+        # Update transfer status
+        transfer.status = "REJECTED"
+        
+        # Trigger fallback to donor matching
+        blood_request = transfer.blood_request
+        
+        # Send Notification to patient
+        from app.notifications.services import create_notification
+        create_notification({
+            "user_id": blood_request.patient.user_id,
+            "message": f"Hospital transfer request rejected by {hospital.hospital_name}. Searching compatible donors...",
+            "type": "WARNING",
+            "is_read": False,
+            "related_request_id": blood_request.request_id
+        })
+        
+        # Send Notification to destination hospital (requestor)
+        create_notification({
+            "user_id": blood_request.hospital.user.user_id,
+            "message": f"Hospital {hospital.hospital_name} rejected the transfer of {transfer.units_requested} units of {transfer.blood_group}.",
+            "type": "WARNING",
+            "is_read": False,
+            "related_request_id": blood_request.request_id
+        })
+        
+        from app.matching.services import find_matching_donors
+        matches = find_matching_donors(blood_request)
+        if matches:
+            blood_request.status = "Matched"
+        else:
+            blood_request.status = "Pending"
+            
+        db.session.commit()
+        return jsonify({
+            "success": True,
+            "message": "Transfer rejected. Switched request to donor matching fallback.",
+            "transfer": transfer.to_dict()
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": str(e)}), 500

@@ -20,6 +20,8 @@ from app.models.email_verification import EmailVerification
 from app.models.hospital import Hospital
 from app.models.blood_inventory import BloodInventory, BloodInventoryTransaction
 
+from app.models.hospital_transfer import HospitalTransfer
+
 app = create_app()
 
 def setup_test_data():
@@ -33,6 +35,7 @@ def setup_test_data():
     db.session.query(Donation).delete()
     db.session.query(Badge).delete()
     db.session.query(RewardPoint).delete()
+    db.session.query(HospitalTransfer).delete()
     db.session.query(BloodInventoryTransaction).delete()
     db.session.query(BloodInventory).delete()
     db.session.query(BloodRequest).delete()

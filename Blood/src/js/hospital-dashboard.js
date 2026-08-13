@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Load Data
     loadHospitalProfile();
     loadHospitalInventory();
+    loadTransfers();
 
     // Setup Form Handler
     const adjustForm = document.getElementById("adjustForm");
@@ -167,3 +168,110 @@ async function handleInventoryAdjustment(event) {
         formMessage.style.color = "red";
     }
 }
+
+async function loadTransfers() {
+    const token = localStorage.getItem("token");
+    const incomingBody = document.getElementById("incomingTransfersBody");
+    const outgoingBody = document.getElementById("outgoingTransfersBody");
+
+    // Load Incoming
+    try {
+        const response = await fetch(`${API_URL}/api/hospitals/transfers/incoming`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const result = await response.json();
+        if (response.ok && result.transfers.length > 0) {
+            incomingBody.innerHTML = result.transfers.map(t => `
+                <tr>
+                    <td><strong>${t.destination_hospital_name}</strong></td>
+                    <td><span class="blood-type" style="font-size: 16px; margin: 0;">${t.blood_group}</span></td>
+                    <td><strong>${t.units_requested}</strong></td>
+                    <td>${t.distance_km} km</td>
+                    <td>${t.created_at}</td>
+                    <td>
+                        ${t.status === 'PENDING' ? `
+                            <button onclick="approveTransfer(${t.transfer_id})" class="action-btn btn-approve">Approve</button>
+                            <button onclick="rejectTransfer(${t.transfer_id})" class="action-btn btn-reject">Reject</button>
+                        ` : `
+                            <span class="badge-status badge-${t.status.toLowerCase()}">${t.status}</span>
+                        `}
+                    </td>
+                </tr>
+            `).join("");
+        } else {
+            incomingBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #777;">No incoming transfer requests.</td></tr>`;
+        }
+    } catch (err) {
+        console.error(err);
+        incomingBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: red;">Error loading incoming transfers.</td></tr>`;
+    }
+
+    // Load Outgoing
+    try {
+        const response = await fetch(`${API_URL}/api/hospitals/transfers/outgoing`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const result = await response.json();
+        if (response.ok && result.transfers.length > 0) {
+            outgoingBody.innerHTML = result.transfers.map(t => `
+                <tr>
+                    <td><strong>${t.source_hospital_name}</strong></td>
+                    <td><span class="blood-type" style="font-size: 16px; margin: 0;">${t.blood_group}</span></td>
+                    <td><strong>${t.units_requested}</strong></td>
+                    <td>${t.distance_km} km</td>
+                    <td><span class="badge-status badge-${t.status.toLowerCase()}">${t.status}</span></td>
+                    <td>${t.created_at}</td>
+                </tr>
+            `).join("");
+        } else {
+            outgoingBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #777;">No outgoing transfer requests.</td></tr>`;
+        }
+    } catch (err) {
+        console.error(err);
+        outgoingBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: red;">Error loading outgoing transfers.</td></tr>`;
+    }
+}
+
+async function approveTransfer(transferId) {
+    const token = localStorage.getItem("token");
+    if (!confirm("Are you sure you want to approve this transfer? Inventory will be deducted immediately.")) return;
+
+    try {
+        const response = await fetch(`${API_URL}/api/hospitals/transfers/${transferId}/approve`, {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const result = await response.json();
+        alert(result.message);
+        if (response.ok) {
+            loadHospitalInventory();
+            loadTransfers();
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Error approving transfer request.");
+    }
+}
+
+async function rejectTransfer(transferId) {
+    const token = localStorage.getItem("token");
+    if (!confirm("Are you sure you want to reject this transfer request?")) return;
+
+    try {
+        const response = await fetch(`${API_URL}/api/hospitals/transfers/${transferId}/reject`, {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const result = await response.json();
+        alert(result.message);
+        if (response.ok) {
+            loadTransfers();
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Error rejecting transfer request.");
+    }
+}
+
+window.approveTransfer = approveTransfer;
+window.rejectTransfer = rejectTransfer;

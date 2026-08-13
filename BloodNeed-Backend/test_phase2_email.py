@@ -20,6 +20,7 @@ from app.models.reward_point import RewardPoint
 from app.models.blood_request import BloodRequest
 from app.models.hospital import Hospital
 from app.models.blood_inventory import BloodInventory, BloodInventoryTransaction
+from app.models.hospital_transfer import HospitalTransfer
 from app.auth.utils import verify_password
 from app.utils.security import role_required
 
@@ -35,6 +36,7 @@ def setup_test_data():
     db.session.query(Donation).delete()
     db.session.query(Badge).delete()
     db.session.query(RewardPoint).delete()
+    db.session.query(HospitalTransfer).delete()
     db.session.query(BloodInventoryTransaction).delete()
     db.session.query(BloodInventory).delete()
     db.session.query(BloodRequest).delete()

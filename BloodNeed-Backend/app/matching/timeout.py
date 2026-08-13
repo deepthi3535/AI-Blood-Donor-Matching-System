@@ -108,3 +108,51 @@ def process_expired_matches():
     db.session.commit()
 
     return processed
+
+
+# ==========================================
+# PROCESS EXPIRED TRANSFERS
+# ==========================================
+
+def process_expired_transfers():
+    from app.models.hospital_transfer import HospitalTransfer
+    from app.matching.services import find_matching_donors
+    
+    now = datetime.utcnow()
+    pending_transfers = HospitalTransfer.query.filter_by(status="PENDING").all()
+    
+    for transfer in pending_transfers:
+        blood_request = transfer.blood_request
+        if not blood_request:
+            continue
+        
+        limit_minutes = 5 if blood_request.emergency_level == "CRITICAL" else 15
+        if now - transfer.created_at >= timedelta(minutes=limit_minutes):
+            transfer.status = "REJECTED"
+            
+            # Notify patient
+            create_notification({
+                "user_id": blood_request.patient.user_id,
+                "message": f"Nearby hospital transfer request timed out. Sourcing compatible donors...",
+                "type": "WARNING",
+                "is_read": False,
+                "related_request_id": blood_request.request_id
+            })
+            
+            # Notify source hospital
+            create_notification({
+                "user_id": transfer.source_hospital.user.user_id,
+                "message": f"Transfer request for {transfer.blood_group} to {blood_request.hospital_name} expired.",
+                "type": "WARNING",
+                "is_read": False,
+                "related_request_id": blood_request.request_id
+            })
+            
+            # Fallback to donor matching
+            matches = find_matching_donors(blood_request)
+            if matches:
+                blood_request.status = "Matched"
+            else:
+                blood_request.status = "Pending"
+                
+    db.session.commit()

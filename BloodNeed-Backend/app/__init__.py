@@ -114,7 +114,8 @@ def create_app():
     # ==========================================
 
     from app.matching.timeout import (
-        process_expired_matches
+        process_expired_matches,
+        process_expired_transfers
     )
 
 
@@ -123,6 +124,7 @@ def create_app():
         with app.app_context():
 
             process_expired_matches()
+            process_expired_transfers()
 
 
     # ==========================================

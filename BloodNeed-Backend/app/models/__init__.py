@@ -13,3 +13,4 @@ from app.models.password_reset import PasswordReset
 from app.models.response_history import ResponseHistory
 from app.models.email_verification import EmailVerification
 from app.models.blood_inventory import BloodInventory, BloodInventoryTransaction
+from app.models.hospital_transfer import HospitalTransfer

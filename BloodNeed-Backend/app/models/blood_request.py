@@ -105,7 +105,7 @@ class BloodRequest(db.Model):
             "hospital_longitude": self.hospital_longitude,
             "notes": self.notes,
             "status": self.status,
-            "request_time": self.request_time.strftime("%Y-%m-%d %H:%M:%S")
-            if self.request_time else None
+            "request_time": self.request_time.strftime("%Y-%m-%d %H:%M:%S") if self.request_time else None,
+            "transfers": [t.to_dict() for t in self.transfers]
         }  
 

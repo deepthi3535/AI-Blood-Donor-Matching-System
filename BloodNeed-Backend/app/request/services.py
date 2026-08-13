@@ -31,10 +31,24 @@ def create_request(data):
     # ---------------------------------------------
     from app.models.hospital import Hospital
     hospital_id = data.get("hospital_id")
+    hospital_lat = data.get("hospital_latitude")
+    hospital_lon = data.get("hospital_longitude")
+
     if not hospital_id and data.get("hospital_name"):
         hospital = Hospital.query.filter(db.func.lower(Hospital.hospital_name) == data["hospital_name"].lower().strip()).first()
         if hospital:
             hospital_id = hospital.hospital_id
+            if hospital_lat is None:
+                hospital_lat = hospital.latitude
+            if hospital_lon is None:
+                hospital_lon = hospital.longitude
+    elif hospital_id:
+        hospital = Hospital.query.get(hospital_id)
+        if hospital:
+            if hospital_lat is None:
+                hospital_lat = hospital.latitude
+            if hospital_lon is None:
+                hospital_lon = hospital.longitude
 
     blood_request = BloodRequest(
 
@@ -50,13 +64,9 @@ def create_request(data):
 
         hospital_name=data["hospital_name"],
 
-        hospital_latitude=data.get(
-            "hospital_latitude"
-        ),
+        hospital_latitude=hospital_lat,
 
-        hospital_longitude=data.get(
-            "hospital_longitude"
-        ),
+        hospital_longitude=hospital_lon,
 
         notes=data.get(
             "notes"
