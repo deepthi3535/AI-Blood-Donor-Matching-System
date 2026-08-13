@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register</title>
+
+    <link rel="stylesheet" href="../src/assets/css/style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>AI Blood Donor System</h1>
+
+        <h2>Create Account</h2>
+
+        <form id="registerForm">
+
+            <input
+                type="text"
+                id="full_name"
+                placeholder="Full Name"
+                required
+            >
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Email"
+                required
+            >
+
+            <input
+                type="text"
+                id="phone"
+                placeholder="Phone Number"
+                required
+            >
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Password"
+                required
+            >
+
+            <input
+                type="password"
+                id="confirm_password"
+                placeholder="Confirm Password"
+                required
+            >
+
+            <select id="role">
+
+                <option value="PATIENT">Patient</option>
+
+                <option value="DONOR">Donor</option>
+
+            </select>
+
+            <!-- ================= DONOR FIELDS ================= -->
+
+            <div id="donorFields" style="display:none;">
+
+                <input
+                    type="number"
+                    id="age"
+                    placeholder="Age"
+                >
+
+                <div class="form-group">
+
+                    <label>Weight (kg)</label>
+
+                    <input
+                        type="number"
+                        id="weight"
+                        min="50"
+                        max="200"
+                        placeholder="Enter your weight"
+                    >
+
+                </div>
+
+                <select id="gender">
+
+                    <option value="">Select Gender</option>
+
+                    <option value="Male">Male</option>
+
+                    <option value="Female">Female</option>
+
+                    <option value="Other">Other</option>
+
+                </select>
+
+                <select id="blood_group">
+
+                    <option value="">Blood Group</option>
+
+                    <option>A+</option>
+                    <option>A-</option>
+                    <option>B+</option>
+                    <option>B-</option>
+                    <option>AB+</option>
+                    <option>AB-</option>
+                    <option>O+</option>
+                    <option>O-</option>
+
+                </select>
+
+                <input
+                    type="text"
+                    id="address"
+                    placeholder="Address"
+                >
+
+                <button
+                    type="button"
+                    id="getLocation"
+                >
+                    Get Current Location (Required)
+                </button>
+
+                <input
+                    type="hidden"
+                    id="latitude"
+                >
+
+                <input
+                    type="hidden"
+                    id="longitude"
+                >
+
+            </div>
+
+            <!-- ================= END DONOR FIELDS ================= -->
+
+            <button type="submit">
+
+                Register
+
+            </button>
+
+        </form>
+
+        <p>
+
+            Already have an account?
+
+            <a href="login.html">
+
+                Login
+
+            </a>
+
+        </p>
+
+    </div>
+
+</div>
+
+<script src="../src/js/register.js"></script>
+
+</body>
+
+</html>

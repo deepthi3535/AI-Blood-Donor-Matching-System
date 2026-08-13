@@ -1,0 +1,42 @@
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Python virtual environments
+venv/
+.venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Flask / Python local files
+instance/
+.pytest_cache/
+.mypy_cache/
+
+# Logs
+*.log
+
+# IDE/editor files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node dependencies if any
+node_modules/
+
+# Build/cache
+dist/
+build/
+
+# Project ZIP backup
+*.zip
+# Database backups
+BloodNeed-Backend/database_backup.json
