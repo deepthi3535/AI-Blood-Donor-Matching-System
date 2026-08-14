@@ -13,6 +13,8 @@ from app.models.patient import Patient
 from app.models.donor_match import DonorMatch
 from app.models.hospital import Hospital
 from app.models.blood_inventory import BloodInventory, BloodInventoryTransaction
+from app.models.user import User
+from app.models.donor import Donor
 
 from app.matching.services import find_matching_donors
 
@@ -36,20 +38,38 @@ request_bp = Blueprint(
 )
 
 
+def get_or_create_patient(user_id):
+    patient = Patient.query.filter_by(user_id=user_id).first()
+    if patient is None:
+        user = User.query.get(user_id)
+        if user and user.role == "DONOR":
+            donor = Donor.query.filter_by(user_id=user_id).first()
+            patient = Patient(
+                user_id=user_id,
+                blood_group=donor.blood_group if donor else None,
+                age=donor.age if donor else None,
+                gender=donor.gender if donor else None,
+                latitude=donor.latitude if donor else None,
+                longitude=donor.longitude if donor else None,
+                hospital_name="Donor Patient Profile"
+            )
+            db.session.add(patient)
+            db.session.commit()
+    return patient
+
+
 # ====================================================
 # GET MY BLOOD REQUESTS
 # ====================================================
 
 @request_bp.route("/", methods=["GET"])
 @jwt_required()
-@role_required("PATIENT")
+@role_required("PATIENT", "DONOR")
 def requests():
 
     user_id = get_jwt_identity()
 
-    patient = Patient.query.filter_by(
-        user_id=user_id
-    ).first()
+    patient = get_or_create_patient(user_id)
 
     if patient is None:
 
@@ -107,7 +127,7 @@ def requests():
     methods=["GET"]
 )
 @jwt_required()
-@role_required("PATIENT")
+@role_required("PATIENT", "DONOR")
 def request_details(request_id):
 
     req = get_request(request_id)
@@ -120,9 +140,7 @@ def request_details(request_id):
 
     user_id = get_jwt_identity()
 
-    patient = Patient.query.filter_by(
-        user_id=user_id
-    ).first()
+    patient = get_or_create_patient(user_id)
 
     if patient is None:
 
@@ -147,7 +165,7 @@ def request_details(request_id):
 
 @request_bp.route("/", methods=["POST"])
 @jwt_required()
-@role_required("PATIENT")
+@role_required("PATIENT", "DONOR")
 def add_request():
 
     data = request.get_json()
@@ -160,9 +178,7 @@ def add_request():
 
     user_id = get_jwt_identity()
 
-    patient = Patient.query.filter_by(
-        user_id=user_id
-    ).first()
+    patient = get_or_create_patient(user_id)
 
     if patient is None:
 

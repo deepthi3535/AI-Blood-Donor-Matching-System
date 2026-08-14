@@ -241,17 +241,140 @@
                 </div>`;
         }
 
+        function renderMatchItem(req) {
+            const level = (req.emergency_level || 'Normal').toLowerCase();
+            const distance = req.distance_km != null ? `${req.distance_km.toFixed(1)} km` : 'N/A';
+            
+            const buttonsHtml = req.donor_response === 'Pending' ? `
+                <div class="response-buttons" style="display: flex; gap: 8px; margin-top: 12px;">
+                    <button class="btn-primary" onclick="respondMatch(${req.match_id}, 'Accepted')" style="flex: 1; padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; cursor: pointer; width: auto; min-width: 0;">
+                        <i class="fas fa-check"></i> Accept
+                    </button>
+                    <button class="btn-secondary" onclick="respondMatch(${req.match_id}, 'Rejected')" style="flex: 1; padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; cursor: pointer; width: auto; min-width: 0; border: 1px solid var(--border-color); background: #fff;">
+                        <i class="fas fa-times"></i> Reject
+                    </button>
+                </div>
+            ` : `<span class="status-badge ${req.donor_response.toLowerCase()}" style="margin-top: 8px; display: inline-block;">${req.donor_response}</span>`;
+
+            return `
+                <div class="request-item" style="border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 12px; background: #fff; display: block; height: auto;">
+                    <div class="request-info" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; gap: 12px; align-items: flex-start;">
+                            <span class="blood-tag" style="background: var(--primary-light); color: var(--primary-red); font-weight: 700; padding: 8px 12px; border-radius: 8px; font-size: 1.1rem; min-width: 45px; text-align: center; display: inline-block;">${req.blood_group}</span>
+                            <div>
+                                <h4 style="font-weight: 700; margin: 0 0 4px 0; font-size: 1rem; color: var(--navy);">${req.hospital_name}</h4>
+                                <p style="font-size: 0.85rem; color: var(--secondary-gray); margin: 0 0 4px 0;">
+                                    Patient: <strong>${req.patient_name || 'Anonymous'}</strong><br>
+                                    Distance: <strong>${distance}</strong> • Score: <strong>${req.ranking_score || 0}</strong>
+                                </p>
+                            </div>
+                        </div>
+                        <span class="emergency-badge ${level}">${req.emergency_level}</span>
+                    </div>
+                    ${buttonsHtml}
+                </div>`;
+        }
+
+        async function respondMatch(matchId, status) {
+            try {
+                const response = await window.API.donor.respondToRequest(matchId, status);
+                if (response.success) {
+                    showNotification(response.message || `Match ${status.toLowerCase()} successfully`, 'success');
+                    await loadDonorDashboard();
+                } else {
+                    showNotification(response.message || 'Failed to update response', 'error');
+                }
+            } catch (error) {
+                showNotification('Error updating response', 'error');
+            }
+        }
+        window.respondMatch = respondMatch;
+
+        let donorHistory = [];
+        let donorMyRequests = [];
+
+        async function switchDonorTab(tab) {
+            const tabDonations = document.getElementById('tabDonations');
+            const tabRequests = document.getElementById('tabRequests');
+            const activityBody = document.getElementById('activityBody');
+
+            if (!tabDonations || !tabRequests || !activityBody) return;
+
+            if (tab === 'donations') {
+                tabDonations.style.fontWeight = '700';
+                tabDonations.style.borderBottom = '2px solid var(--primary-red)';
+                tabDonations.style.color = 'var(--navy)';
+                tabRequests.style.fontWeight = '500';
+                tabRequests.style.borderBottom = 'none';
+                tabRequests.style.color = 'var(--secondary-gray)';
+
+                if (donorHistory.length > 0) {
+                    activityBody.innerHTML = donorHistory.slice(0, 3).map(h => `
+                        <div class="activity-item">
+                            <div class="activity-icon">🩸</div>
+                            <div class="activity-info">
+                                <h4>Donation #${h.history_id}</h4>
+                                <p>Request #${h.request_id} • ${new Date(h.donation_date).toLocaleDateString()}</p>
+                            </div>
+                            <span class="status-badge success">${h.status}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    renderEmptyState(activityBody, 'No donations yet', '🩸');
+                }
+            } else {
+                tabRequests.style.fontWeight = '700';
+                tabRequests.style.borderBottom = '2px solid var(--primary-red)';
+                tabRequests.style.color = 'var(--navy)';
+                tabDonations.style.fontWeight = '500';
+                tabDonations.style.borderBottom = 'none';
+                tabDonations.style.color = 'var(--secondary-gray)';
+
+                if (donorMyRequests.length === 0) {
+                    activityBody.innerHTML = `<p style="text-align: center; padding: 15px; color: var(--secondary-gray);"><i class="fas fa-spinner fa-spin"></i> Loading requests...</p>`;
+                    const res = await window.API.patient.getRequests();
+                    donorMyRequests = res.success ? res.data : [];
+                }
+
+                if (donorMyRequests.length > 0) {
+                    activityBody.innerHTML = donorMyRequests.slice(0, 3).map(r => `
+                        <div class="activity-item">
+                            <div class="activity-icon">🩸</div>
+                            <div class="activity-info">
+                                <h4>${r.blood_group} at ${r.hospital_name}</h4>
+                                <p>${r.units_needed} unit(s) • ${new Date(r.request_time).toLocaleDateString()}</p>
+                            </div>
+                            <span class="status-badge ${r.status === 'Pending' ? 'pending' : 'success'}">${r.status}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    renderEmptyState(activityBody, 'No requests created yet', '📋');
+                }
+            }
+        }
+        window.switchDonorTab = switchDonorTab;
+
         async function loadDonorDashboard() {
-            document.getElementById('activityTitle').textContent = 'Recent Donations';
+            const activityTitleEl = document.getElementById('activityTitle');
+            if (activityTitleEl) {
+                activityTitleEl.innerHTML = `
+                    <div class="dashboard-tabs" style="display: flex; gap: 15px; margin-bottom: -5px;">
+                        <span id="tabDonations" class="tab-item" onclick="switchDonorTab('donations')" style="cursor: pointer; padding-bottom: 5px;">Recent Donations</span>
+                        <span id="tabRequests" class="tab-item" onclick="switchDonorTab('requests')" style="cursor: pointer; padding-bottom: 5px;">My Requests</span>
+                    </div>
+                `;
+            }
+
             document.getElementById('requestsTitle').textContent = 'Recent Matches';
-            document.getElementById('newRequestBtn').style.display = 'none';
+            document.getElementById('newRequestBtn').style.display = 'inline-flex';
             document.getElementById('availabilitySection').style.display = 'flex';
             document.getElementById('leaderboardSection').style.display = 'block';
 
-            const [profileRes, gamificationRes, historyRes] = await Promise.all([
+            const [profileRes, gamificationRes, historyRes, requestsRes] = await Promise.all([
                 window.API.donor.getProfile(),
                 window.API.donor.getGamification(),
-                window.API.donor.getHistory()
+                window.API.donor.getHistory(),
+                window.API.donor.getRequests()
             ]);
 
             if (profileRes.success) {
@@ -277,23 +400,26 @@
                 document.getElementById('gamPoints').textContent = `${gam.points || 0} points`;
             }
 
-            const activityBody = document.getElementById('activityBody');
-            if (historyRes.success && historyRes.data.length > 0) {
-                activityBody.innerHTML = historyRes.data.slice(0, 3).map(h => `
-                    <div class="activity-item">
-                        <div class="activity-icon">🩸</div>
-                        <div class="activity-info">
-                            <h4>Donation #${h.history_id}</h4>
-                            <p>Request #${h.request_id} • ${new Date(h.donation_date).toLocaleDateString()}</p>
-                        </div>
-                        <span class="status-badge success">${h.status}</span>
-                    </div>
-                `).join('');
-            } else {
-                renderEmptyState(activityBody, 'No donations yet', '🩸');
+            if (historyRes.success) {
+                donorHistory = historyRes.data;
             }
+            
+            // Force reset request array so it re-fetches fresh requests
+            donorMyRequests = [];
+            
+            await switchDonorTab('donations');
 
-            renderEmptyState(document.getElementById('requestsBody'), 'No active matches', '🔍');
+            const requestsBody = document.getElementById('requestsBody');
+            if (requestsRes.success && requestsRes.data.length > 0) {
+                const activeMatches = requestsRes.data.filter(req => req.donor_response === 'Pending' || req.donor_response === 'Accepted');
+                if (activeMatches.length > 0) {
+                    requestsBody.innerHTML = activeMatches.map(req => renderMatchItem(req)).join('');
+                } else {
+                    renderEmptyState(requestsBody, 'No active matches', '🔍');
+                }
+            } else {
+                renderEmptyState(requestsBody, 'No active matches', '🔍');
+            }
         }
 
         async function loadPatientDashboard() {

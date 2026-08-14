@@ -67,6 +67,25 @@ window.API = {
       });
       const result = await response.json();
       return { success: response.ok, message: result.message || "Availability updated" };
+    },
+    getRequests: async () => {
+      const response = await fetch(`${API_URL}/donors/requests`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      });
+      const result = await response.json();
+      return { success: response.ok, data: result };
+    },
+    respondToRequest: async (matchId, status) => {
+      const response = await fetch(`${API_URL}/donors/requests/${matchId}/respond`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        },
+        body: JSON.stringify({ status })
+      });
+      const result = await response.json();
+      return { success: response.ok, message: result.message || "Response updated" };
     }
   },
   patient: {
