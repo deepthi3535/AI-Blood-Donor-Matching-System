@@ -1,131 +1,288 @@
 /* ==========================================================================
-   BLOODNEED - RESPONSIVE STYLES
+   BLOOD NEED - RESPONSIVE STYLES
    ========================================================================== */
 
-/* Tablet (Large) */
-@media (max-width: 1024px) {
-    .hero-title {
-        font-size: 3.2rem;
+/* MOBILE FIRST PRESET */
+@media (max-width: 576px) {
+    .navbar {
+        padding: 0.5rem 1rem;
     }
     
-    .hero-grid {
-        gap: 40px;
-    }
-}
-
-/* Tablet (Medium) */
-@media (max-width: 992px) {
     .hero {
-        padding: 60px 0;
+        padding: 2rem 1rem;
     }
     
-    .hero-grid {
-        grid-template-columns: 1fr;
-        gap: 50px;
-        text-align: center;
+    .hero h1 {
+        font-size: 1.8rem;
     }
     
-    .hero-desc {
-        margin: 0 auto 36px;
+    .card {
+        margin-bottom: 1rem;
     }
     
-    .hero-buttons {
-        justify-content: center;
-    }
-    
-    .hero-trust-list {
-        justify-content: center;
-    }
-    
-    .hero-visual {
-        max-width: 500px;
-        margin: 0 auto;
-    }
-    
-    .floating-mockup.left {
-        left: -20px;
-    }
-    
-    .floating-mockup.right {
-        right: -20px;
-    }
-    
-    /* Layouts */
-    .timeline-steps {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 20px;
-    }
-    
-    .timeline-connector {
-        transform: rotate(90deg);
-        margin: 5px 0;
+    .btn-emergency {
+        width: 100%;
+        padding: 0.8rem;
     }
 }
 
-/* Mobile */
+/* TABLET PRESET */
+@media (min-width: 577px) and (max-width: 992px) {
+    .container {
+        max-width: 90%;
+    }
+}
+
+/* ---------- RESPONSIVE MEDIA QUERIES ---------- */
+
+@media (max-width: 992px) {
+    .hero-content h1 {
+        font-size: 2.8rem;
+    }
+    
+    .emergency-stats {
+        gap: 2rem;
+    }
+    
+    .steps {
+        flex-direction: column;
+    }
+    
+    .step-arrow {
+        transform: rotate(90deg);
+        margin: 10px 0;
+    }
+    
+    .auth-container {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .auth-info {
+        display: none;
+    }
+    
+    .request-container {
+        flex-direction: column;
+    }
+    
+    .request-sidebar {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 768px) {
+    .hamburger {
+        display: block;
+    }
+    
     .navbar-links {
         display: none;
         flex-direction: column;
         width: 100%;
+        padding: 1rem 0;
+        background: var(--white);
         position: absolute;
         top: 100%;
         left: 0;
-        background: var(--surface);
-        border-top: 1px solid var(--border);
-        border-bottom: 1px solid var(--border);
-        padding: 20px;
-        gap: 16px;
-        box-shadow: var(--shadow-hover);
+        box-shadow: var(--shadow);
     }
     
     .navbar-links.active {
         display: flex;
     }
     
-    .navbar-actions {
-        display: none;
+    .hero-content h1 {
+        font-size: 2rem;
     }
     
-    .hamburger {
-        display: block !important;
+    .hero-content p {
+        font-size: 1rem;
     }
     
-    .hero-title {
-        font-size: 2.4rem;
+    .emergency-stats {
+        flex-wrap: wrap;
+        gap: 1rem;
     }
     
-    .stats-container {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 16px !important;
+    .stat-number {
+        font-size: 1.8rem;
     }
     
-    .features-container {
-        grid-template-columns: 1fr !important;
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .blood-groups-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .form-row {
+        flex-direction: column;
+    }
+    
+    .form-group.half {
+        width: 100%;
+    }
+    
+    .emergency-levels {
+        flex-direction: column;
+    }
+    
+    .donor-card {
+        flex-direction: column;
+    }
+    
+    .donor-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .donor-response {
+        margin-top: 1rem;
+        width: 100%;
+    }
+    
+    .response-actions {
+        justify-content: flex-start;
+    }
+    
+    .matching-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .leaderboard-item {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .auto-select-indicator {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .page-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .map-overlay {
+        bottom: 10px;
+        padding: 8px 15px;
+        width: 90%;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .map-overlay .btn-primary {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
     }
 }
 
-/* Small Mobile */
 @media (max-width: 480px) {
-    .hero-title {
-        font-size: 2rem;
+    .hero {
+        padding: 2rem 0;
+        min-height: auto;
+    }
+    
+    .hero-content h1 {
+        font-size: 1.6rem;
+    }
+    
+    .btn-primary,
+    .btn-emergency {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    
+    .blood-groups-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    
+    .stat-card {
+        padding: 0.8rem;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .quick-actions {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    
+    .quick-action {
+        padding: 0.8rem;
+        font-size: 0.85rem;
+    }
+    
+    .blood-groups-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+    
+    .blood-group-card {
+        padding: 0.6rem;
+    }
+    
+    .blood-type {
+        font-size: 1.1rem;
     }
     
     .hero-buttons {
         flex-direction: column;
+        align-items: center;
+    }
+    
+    .hero-buttons .btn-primary,
+    .hero-buttons .btn-emergency {
         width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Landscape Phones */
+@media (max-height: 600px) and (orientation: landscape) {
+    .hero {
+        min-height: 300px;
+        padding: 2rem 0;
     }
     
-    .hero-buttons .btn {
-        width: 100%;
+    .hero-content h1 {
+        font-size: 2rem;
     }
     
-    .stats-container {
-        grid-template-columns: 1fr !important;
-    }
-    
-    .floating-mockup {
-        display: none;
+    .emergency-stats {
+        gap: 1.5rem;
     }
 }
