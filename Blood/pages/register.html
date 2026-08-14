@@ -1,231 +1,287 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Register</title>
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - Blood Need</title>
+    
+    <!-- CSS Files -->
     <link rel="stylesheet" href="../src/assets/css/style.css">
-
+    <link rel="stylesheet" href="../src/assets/css/responsive.css">
+    <link rel="stylesheet" href="../src/assets/css/components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
-
 <body>
 
-<div class="container">
+    <!-- ==================== NAVIGATION ==================== -->
+    <nav class="navbar navbar-minimal">
+        <div class="container">
+            <div class="navbar-brand">
+                <a href="../index.html">
+                    <span class="blood-icon">🩸</span>
+                    Blood <span class="highlight">Need</span>
+                </a>
+            </div>
+            <div class="navbar-links">
+                <a href="../index.html">Home</a>
+                <a href="login.html" class="btn-outline">Login</a>
+            </div>
+        </div>
+    </nav>
 
-    <div class="card" id="registerCard">
+    <!-- ==================== REGISTER SECTION ==================== -->
+    <section class="auth-section register-section">
+        <div class="container">
+            <div class="auth-container">
+                
+                <!-- Main card containing form or otp -->
+                <div class="auth-card" id="registerCard">
+                    <div class="auth-header">
+                        <div class="auth-icon">🩸</div>
+                        <h2>Join Blood Need</h2>
+                        <p>Become a part of our lifesaving community</p>
+                    </div>
+                    
+                    <!-- User Type Selection -->
+                    <div class="user-type-toggle">
+                        <button class="type-btn active" data-type="donor" type="button">
+                            <i class="fas fa-user-md"></i> Donor
+                        </button>
+                        <button class="type-btn" data-type="patient" type="button">
+                            <i class="fas fa-user-injured"></i> Patient
+                        </button>
+                        <button class="type-btn" data-type="hospital" type="button">
+                            <i class="fas fa-hospital"></i> Hospital
+                        </button>
+                        <button class="type-btn" data-type="admin" type="button">
+                            <i class="fas fa-user-shield"></i> Admin
+                        </button>
+                    </div>
+                    
+                    <!-- Registration Form -->
+                    <form id="registerForm" class="auth-form" data-user-type="donor">
+                        <!-- Personal Information -->
+                        <div class="form-row">
+                            <div class="form-group half">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" placeholder="John" required />
+                            </div>
+                            <div class="form-group half">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" placeholder="Doe" required />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-icon"><i class="fas fa-envelope"></i></span>
+                                <input type="email" id="email" placeholder="john@example.com" required />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <div class="input-group">
+                                <span class="input-icon"><i class="fas fa-phone"></i></span>
+                                <input type="tel" id="phone" placeholder="9876543210" required />
+                            </div>
+                        </div>
+                        
+                        <!-- Patient Specific Fields -->
+                        <div id="patientFields" class="conditional-fields" style="display:none;">
+                            <div class="form-row">
+                                <div class="form-group half">
+                                    <label for="patientBloodGroup">Blood Group</label>
+                                    <select id="patientBloodGroup">
+                                        <option value="">Select</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+                                <div class="form-group half">
+                                    <label for="patientHospital">Hospital Name</label>
+                                    <input type="text" id="patientHospital" placeholder="City Hospital" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Donor Specific Fields -->
+                        <div id="donorFields" class="conditional-fields">
+                            <div class="form-row">
+                                <div class="form-group half">
+                                    <label for="bloodGroup">Blood Group</label>
+                                    <select id="bloodGroup">
+                                        <option value="">Select</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+                                <div class="form-group half">
+                                    <label for="dob">Age</label>
+                                    <input type="number" id="dob" placeholder="25" min="18" max="100" />
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group half">
+                                    <label for="weight">Weight (kg)</label>
+                                    <input type="number" id="weight" placeholder="70" min="45" />
+                                </div>
+                                <div class="form-group half">
+                                    <label for="gender">Gender</label>
+                                    <select id="gender">
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <textarea id="address" placeholder="Your full address" rows="2"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <button type="button" class="btn-location" id="getLocation">
+                                    <i class="fas fa-map-marker-alt"></i> Get Current Location
+                                </button>
+                                <span id="locationStatus" class="location-status">Location not set</span>
+                            </div>
+                            
+                            <input type="hidden" id="latitude">
+                            <input type="hidden" id="longitude">
 
-        <h1>AI Blood Donor System</h1>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="terms" />
+                                    <span>I agree to donate blood and follow all guidelines</span>
+                                </label>
+                            </div>
+                        </div>
 
-        <h2>Create Account</h2>
+                        <!-- Hospital Specific Fields -->
+                        <div id="hospitalFields" class="conditional-fields" style="display:none;">
+                            <div class="form-group">
+                                <label for="hospitalAddress">Hospital Address</label>
+                                <textarea id="hospitalAddress" placeholder="Enter hospital full address" rows="2"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <button type="button" class="btn-location" id="getHospitalLocation">
+                                    <i class="fas fa-map-marker-alt"></i> Get Hospital Location
+                                </button>
+                                <span id="hospitalLocationStatus" class="location-status">Location not set</span>
+                            </div>
 
-        <form id="registerForm">
-
-            <input
-                type="text"
-                id="full_name"
-                placeholder="Full Name"
-                required
-            >
-
-            <input
-                type="email"
-                id="email"
-                placeholder="Email"
-                required
-            >
-
-            <input
-                type="text"
-                id="phone"
-                placeholder="Phone Number"
-                required
-            >
-
-            <input
-                type="password"
-                id="password"
-                placeholder="Password"
-                required
-            >
-
-            <input
-                type="password"
-                id="confirm_password"
-                placeholder="Confirm Password"
-                required
-            >
-
-            <select id="role">
-
-                <option value="PATIENT">Patient</option>
-
-                <option value="DONOR">Donor</option>
-
-                <option value="HOSPITAL">Hospital</option>
-
-            </select>
-
-            <!-- ================= DONOR FIELDS ================= -->
-
-            <div id="donorFields" style="display:none;">
-
-                <input
-                    type="number"
-                    id="age"
-                    placeholder="Age"
-                >
-
-                <div class="form-group">
-
-                    <label>Weight (kg)</label>
-
-                    <input
-                        type="number"
-                        id="weight"
-                        min="50"
-                        max="200"
-                        placeholder="Enter your weight"
-                    >
-
+                            <input type="hidden" id="hospital_latitude">
+                            <input type="hidden" id="hospital_longitude">
+                        </div>
+                        
+                        <!-- Password -->
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="input-group">
+                                <span class="input-icon"><i class="fas fa-lock"></i></span>
+                                <input type="password" id="password" placeholder="Min 8 characters" required />
+                            </div>
+                            <div class="password-strength" id="passwordStrength"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <div class="input-group">
+                                <span class="input-icon"><i class="fas fa-lock"></i></span>
+                                <input type="password" id="confirmPassword" placeholder="Confirm password" required />
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary btn-full">
+                            <i class="fas fa-user-plus"></i> Create Account
+                        </button>
+                    </form>
+                    
+                    <div class="auth-footer">
+                        <p>Already have an account? <a href="login.html">Login here</a></p>
+                    </div>
                 </div>
 
-                <select id="gender">
-
-                    <option value="">Select Gender</option>
-
-                    <option value="Male">Male</option>
-
-                    <option value="Female">Female</option>
-
-                    <option value="Other">Other</option>
-
-                </select>
-
-                <select id="blood_group">
-
-                    <option value="">Blood Group</option>
-
-                    <option>A+</option>
-                    <option>A-</option>
-                    <option>B+</option>
-                    <option>B-</option>
-                    <option>AB+</option>
-                    <option>AB-</option>
-                    <option>O+</option>
-                    <option>O-</option>
-
-                </select>
-
-                <input
-                    type="text"
-                    id="address"
-                    placeholder="Address"
-                >
-
-                <button
-                    type="button"
-                    id="getLocation"
-                >
-                    Get Current Location (Required)
-                </button>
-
-                <input
-                    type="hidden"
-                    id="latitude"
-                >
-
-                <input
-                    type="hidden"
-                    id="longitude"
-                >
-
+                <!-- OTP Verification Section -->
+                <div class="auth-card" id="otpSection" style="display: none;">
+                    <div class="auth-header">
+                        <div class="auth-icon">📧</div>
+                        <h2>Verify Email</h2>
+                        <p>We have sent a 6-digit OTP code to: <br><strong id="otpEmailDisplay" style="color: var(--primary-red);"></strong></p>
+                    </div>
+                    <form id="otpForm" class="auth-form">
+                        <div class="form-group">
+                            <input type="text" id="otpCode" placeholder="Enter 6-digit OTP" maxLength="6" required style="letter-spacing: 5px; text-align: center; font-size: 1.2em;" />
+                        </div>
+                        <button type="submit" class="btn-primary btn-full">Verify Email</button>
+                    </form>
+                    <div style="margin-top: 20px; text-align: center;">
+                        <button type="button" id="resendOtpBtn" class="btn-secondary" style="width: 100%;">Resend OTP</button>
+                        <p id="resendTimerMessage" style="font-size: 0.9em; margin-top: 8px; color: var(--secondary-gray);"></p>
+                    </div>
+                    <div class="auth-footer">
+                        <p><a href="login.html">Back to Login</a></p>
+                    </div>
+                </div>
+                
+                <!-- Right Side Info -->
+                <div class="auth-info">
+                    <div class="auth-info-content">
+                        <h3>Why Donate Blood?</h3>
+                        <div class="donor-benefits" style="display: flex; flex-direction: column; gap: 20px; margin-top: 20px;">
+                            <div class="benefit-item" style="display: flex; gap: 15px; align-items: flex-start;">
+                                <span class="benefit-icon" style="font-size: 1.8rem;">❤️</span>
+                                <div>
+                                    <h4 style="font-weight: 700; margin-bottom: 2px;">Save Lives</h4>
+                                    <p style="font-size: 0.9rem; opacity: 0.9;">One donation can save up to 3 lives</p>
+                                </div>
+                            </div>
+                            <div class="benefit-item" style="display: flex; gap: 15px; align-items: flex-start;">
+                                <span class="benefit-icon" style="font-size: 1.8rem;">🏆</span>
+                                <div>
+                                    <h4 style="font-weight: 700; margin-bottom: 2px;">Earn Rewards</h4>
+                                    <p style="font-size: 0.9rem; opacity: 0.9;">Get points, badges & recognition</p>
+                                </div>
+                            </div>
+                            <div class="benefit-item" style="display: flex; gap: 15px; align-items: flex-start;">
+                                <span class="benefit-icon" style="font-size: 1.8rem;">📊</span>
+                                <div>
+                                    <h4 style="font-weight: 700; margin-bottom: 2px;">Track Impact</h4>
+                                    <p style="font-size: 0.9rem; opacity: 0.9;">See how many lives you've saved</p>
+                                </div>
+                            </div>
+                            <div class="benefit-item" style="display: flex; gap: 15px; align-items: flex-start;">
+                                <span class="benefit-icon" style="font-size: 1.8rem;">⚡</span>
+                                <div>
+                                    <h4 style="font-weight: 700; margin-bottom: 2px;">Emergency Priority</h4>
+                                    <p style="font-size: 0.9rem; opacity: 0.9;">Get help when you need it most</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <!-- ================= END DONOR FIELDS ================= -->
-
-            <!-- ================= HOSPITAL FIELDS ================= -->
-            <div id="hospitalFields" style="display:none;">
-                <input
-                    type="text"
-                    id="hospital_address"
-                    placeholder="Hospital Address"
-                >
-                <button
-                    type="button"
-                    id="getHospitalLocation"
-                >
-                    Get Hospital Location (Required)
-                </button>
-                <input
-                    type="hidden"
-                    id="hospital_latitude"
-                >
-                <input
-                    type="hidden"
-                    id="hospital_longitude"
-                >
-            </div>
-            <!-- ================= END HOSPITAL FIELDS ================= -->
-
-            <button type="submit">
-
-                Register
-
-            </button>
-
-        </form>
-
-        <p>
-
-            Already have an account?
-
-            <a href="login.html">
-
-                Login
-
-            </a>
-
-    </div>
-
-    <!-- ================= OTP VERIFICATION SECTION ================= -->
-    <div class="card" id="otpSection" style="display: none;">
-        <h1>AI Blood Donor System</h1>
-        <h2>Verify Email</h2>
-        <p style="margin-bottom: 20px; color: #666;">
-            We have sent a 6-digit OTP code to: <br>
-            <strong id="otpEmailDisplay" style="color: #d9534f;"></strong>
-        </p>
-        <form id="otpForm">
-            <input
-                type="text"
-                id="otpCode"
-                placeholder="Enter 6-digit OTP"
-                maxLength="6"
-                required
-                style="letter-spacing: 5px; text-align: center; font-size: 1.2em;"
-            >
-            <button type="submit" class="primary-button" style="margin-top: 15px;">Verify Email</button>
-        </form>
-        <div style="margin-top: 20px; text-align: center;">
-            <button type="button" id="resendOtpBtn" style="background-color: #6c757d; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">
-                Resend OTP
-            </button>
-            <p id="resendTimerMessage" style="font-size: 0.9em; margin-top: 8px; color: #666;"></p>
         </div>
-        <p style="margin-top: 20px; font-size: 0.95em;">
-            <a href="login.html" style="color: #d9534f; text-decoration: none; font-weight: bold;">Back to Login</a>
-        </p>
-    </div>
+    </section>
 
-</div>
-
-<script src="../src/js/register.js?v=4"></script>
-
+    <!-- Custom JS -->
+    <script src="../src/js/register.js?v=4"></script>
 </body>
-
 </html>

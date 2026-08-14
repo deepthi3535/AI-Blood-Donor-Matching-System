@@ -93,7 +93,9 @@ def register_user(data):
         if role == "PATIENT":
 
             patient = Patient(
-                user_id=user.user_id
+                user_id=user.user_id,
+                blood_group=data.get("blood_group"),
+                hospital_name=data.get("hospital_name")
             )
 
             db.session.add(patient)
