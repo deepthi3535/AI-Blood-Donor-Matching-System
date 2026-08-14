@@ -356,11 +356,21 @@
             );
 
 
-        if (!token || !requestId) {
-
-            window.location.href =
-                "login.html";
-
+        if (!token) {
+            window.location.href = "login.html";
+        }
+        if (!requestId) {
+            alert("Please select a blood request from your dashboard first to view its matching map.");
+            const user = JSON.parse(localStorage.getItem("user") || "{}");
+            if (user.role === "PATIENT") {
+                window.location.href = "patient-dashboard.html";
+            } else if (user.role === "DONOR") {
+                window.location.href = "donor-dashboard.html";
+            } else if (user.role === "HOSPITAL") {
+                window.location.href = "hospital-dashboard.html";
+            } else {
+                window.location.href = "dashboard.html";
+            }
         }
 
 
