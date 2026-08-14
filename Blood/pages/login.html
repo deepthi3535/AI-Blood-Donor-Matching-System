@@ -1,97 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Login | Blood Donor Matching System</title>
-
-   <link rel="stylesheet" href="../src/assets/css/common.css">
-    <link rel="stylesheet" href="../src/assets/css/auth.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Blood Need</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../src/assets/css/style.css">
+    <link rel="stylesheet" href="../src/assets/css/responsive.css">
+    <link rel="stylesheet" href="../src/assets/css/components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
-
 <body>
 
-    <main class="auth-page">
-
-        <section class="auth-card">
-
-            <div class="auth-header">
-                <div class="blood-icon">🩸</div>
-
-                <h1>Welcome Back</h1>
-
-                <p>
-                    Login to your blood donor matching account
-                </p>
+    <!-- ==================== NAVIGATION ==================== -->
+    <nav class="navbar navbar-minimal">
+        <div class="container">
+            <div class="navbar-brand">
+                <a href="../index.html">
+                    <span class="blood-icon">🩸</span>
+                    Blood <span class="highlight">Need</span>
+                </a>
             </div>
-
-            <form id="loginForm">
-
-                <div class="form-group">
-
-                    <label for="email">
-                        Email Address
-                    </label>
-
-                    <input
-                        type="email"
-                        id="email"
-                        placeholder="Enter your email"
-                        required
-                    >
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="password">
-                        Password
-                    </label>
-
-                    <input
-                        type="password"
-                        id="password"
-                        placeholder="Enter your password"
-                        required
-                    >
-
-                </div>
-
-                <button
-                    type="submit"
-                    class="primary-button"
-                >
-                    Login 
-
-
-                </button>
-
-                <p
-                    id="loginMessage"
-                    class="form-message"
-                ></p>
-<div class="forgot-password">
-    <a href="forgot-password.html">Forgot Password?</a>
-</div>
-            </form>
-
-            <div class="auth-footer">
-
-                <p>
-                    Don't have an account?
-                    <a href="register.html">
-                        Create Account
-                    </a>
-                </p>
-
+            <div class="navbar-links">
+                <a href="../index.html">Home</a>
+                <a href="register.html" class="btn-outline">Register</a>
             </div>
+        </div>
+    </nav>
 
-        </section>
+    <!-- ==================== LOGIN SECTION ==================== -->
+    <section class="auth-section login-section">
+        <div class="container">
+            <div class="auth-container">
+                
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <div class="auth-icon">🩸</div>
+                        <h2>Welcome Back</h2>
+                        <p>Login to your account to continue</p>
+                    </div>
+                    
+                    <form id="loginForm" class="auth-form">
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-icon"><i class="fas fa-envelope"></i></span>
+                                <input type="email" id="email" placeholder="Enter your email" required />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="input-group">
+                                <span class="input-icon"><i class="fas fa-lock"></i></span>
+                                <input type="password" id="password" placeholder="Enter your password" required />
+                            </div>
+                        </div>
+                        
+                        <div class="form-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="rememberMe" />
+                                <span>Remember me</span>
+                            </label>
+                            <a href="forgot-password.html" class="forgot-password">Forgot Password?</a>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary btn-full">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                        
+                        <p id="loginMessage" class="form-message" style="margin-top: 15px; font-weight: 600; text-align: center;"></p>
+                    </form>
+                    
+                    <div class="auth-footer">
+                        <p>Don't have an account? <a href="register.html">Register now</a></p>
+                    </div>
+                </div>
+                
+                <!-- Right Side Info -->
+                <div class="auth-info">
+                    <div class="auth-info-content">
+                        <h3>Why Blood Need?</h3>
+                        <div class="donor-benefits" style="display: flex; flex-direction: column; gap: 20px; margin-top: 20px;">
+                            <div class="benefit-item" style="display: flex; gap: 15px; align-items: flex-start;">
+                                <span class="benefit-icon" style="font-size: 1.8rem;">❤️</span>
+                                <div>
+                                    <h4 style="font-weight: 700; margin-bottom: 2px;">Instant donor matching</h4>
+                                    <p style="font-size: 0.9rem; opacity: 0.9;">Direct coordination with active donors nearby</p>
+                                </div>
+                            </div>
+                            <div class="benefit-item" style="display: flex; gap: 15px; align-items: flex-start;">
+                                <span class="benefit-icon" style="font-size: 1.8rem;">📍</span>
+                                <div>
+                                    <h4 style="font-weight: 700; margin-bottom: 2px;">GPS location tracking</h4>
+                                    <p style="font-size: 0.9rem; opacity: 0.9;">Dynamic location finding using browser Geolocation</p>
+                                </div>
+                            </div>
+                            <div class="benefit-item" style="display: flex; gap: 15px; align-items: flex-start;">
+                                <span class="benefit-icon" style="font-size: 1.8rem;">🏆</span>
+                                <div>
+                                    <h4 style="font-weight: 700; margin-bottom: 2px;">Gamification rewards</h4>
+                                    <p style="font-size: 0.9rem; opacity: 0.9;">Earn points, tiers, and badges for donations</p>
+                                </div>
+                            </div>
+                            <div class="benefit-item" style="display: flex; gap: 15px; align-items: flex-start;">
+                                <span class="benefit-icon" style="font-size: 1.8rem;">📞</span>
+                                <div>
+                                    <h4 style="font-weight: 700; margin-bottom: 2px;">24/7 emergency support</h4>
+                                    <p style="font-size: 0.9rem; opacity: 0.9;">Get immediate help when critical counts drop</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
 
-    </main>
-
-   <script src="../src/js/auth.js?v=4"></script>
-
+    <!-- Scripts -->
+    <script src="../src/js/auth.js?v=4"></script>
 </body>
 </html>
