@@ -33,7 +33,6 @@
     <section class="auth-section login-section">
         <div class="container">
             <div class="auth-container">
-                
                 <div class="auth-card">
                     <div class="auth-header">
                         <div class="auth-icon">🩸</div>
@@ -41,7 +40,23 @@
                         <p>Login to your account to continue</p>
                     </div>
                     
-                    <form id="loginForm" class="auth-form">
+                    <!-- User Type Selection -->
+                    <div class="user-type-toggle">
+                        <button class="type-btn active" data-type="donor" type="button">
+                            <i class="fas fa-user-md"></i> Donor
+                        </button>
+                        <button class="type-btn" data-type="patient" type="button">
+                            <i class="fas fa-user-injured"></i> Patient
+                        </button>
+                        <button class="type-btn" data-type="hospital" type="button">
+                            <i class="fas fa-hospital"></i> Hospital
+                        </button>
+                        <button class="type-btn" data-type="admin" type="button">
+                            <i class="fas fa-user-shield"></i> Admin
+                        </button>
+                    </div>
+                    
+                    <form id="loginForm" class="auth-form" data-user-type="donor">
                         <div class="form-group">
                             <label for="email">Email Address</label>
                             <div class="input-group">
