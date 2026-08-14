@@ -1686,3 +1686,171 @@
     color: var(--secondary-gray);
     font-size: 0.95rem;
 }
+
+/* Patient requests page */
+.requests-page {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 15px;
+}
+
+.requests-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.requests-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.requests-header p {
+    color: var(--secondary-gray);
+}
+
+.requests-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* My Request details and donor cards */
+.request-card {
+    background: var(--white);
+    border-radius: var(--border-radius, 8px);
+    box-shadow: var(--shadow);
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.request-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color, #e0e0e0);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.request-status {
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.request-status.pending {
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+}
+
+.request-status.matched {
+    background: rgba(40, 167, 69, 0.1);
+    color: var(--success-green, #28a745);
+}
+
+.request-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.matched-donors {
+    border-top: 1px solid var(--border-color, #e0e0e0);
+    padding-top: 20px;
+}
+
+.matched-donors-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+/* Donor Cards inside patient request details */
+.donor-card {
+    border: 1px solid var(--border-color, #e0e0e0);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 12px;
+    background: #fafafa;
+}
+
+.donor-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.donor-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    font-size: 0.9rem;
+}
+
+.response-status {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.response-status.pending {
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+}
+
+.response-status.accepted {
+    background: rgba(40, 167, 69, 0.1);
+    color: var(--success-green, #28a745);
+}
+
+.response-status.rejected {
+    background: rgba(220, 53, 69, 0.1);
+    color: var(--primary-red);
+}
+
+.view-all-map-button {
+    background: var(--navy, #1a1a2e);
+    color: white !important;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+}
+
+.view-all-map-button:hover {
+    background: var(--primary-red);
+}
+
+.cancel-button {
+    background: transparent;
+    color: var(--primary-red);
+    border: 1px solid var(--primary-red);
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: var(--transition);
+}
+
+.cancel-button:hover {
+    background: var(--primary-red);
+    color: white;
+}

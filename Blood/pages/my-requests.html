@@ -1,104 +1,88 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
-
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
-<title>My Blood Requests</title>
-
-<button id="backBtn" onclick="goBackToDashboard()">
-    ← Back to Dashboard
-</button>
-<link rel="stylesheet" href="../src/assets/css/style.css">
-<link rel="stylesheet" href="../src/assets/css/components.css">
-<link rel="stylesheet" href="../src/assets/css/responsive.css">
-
-
-<!-- Leaflet Map CSS -->
-
-<link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
->
-
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Requests - Blood Need</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../src/assets/css/style.css?v=5">
+    <link rel="stylesheet" href="../src/assets/css/components.css?v=5">
+    <link rel="stylesheet" href="../src/assets/css/responsive.css?v=5">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 </head>
-
 <body>
 
-<main class="requests-page">
-
-
-    <div class="requests-header">
-
-
-        <div>
-
-
-            <h1>
-                My Blood Requests
-            </h1>
-
-
-            <p>
-                View and track your blood requests
-            </p>
-
-
+    <!-- ==================== NAVIGATION ==================== -->
+    <nav class="navbar dashboard-nav">
+        <div class="container">
+            <div class="navbar-brand">
+                <a href="../index.html">
+                    <span class="blood-icon">🩸</span>
+                    Blood <span class="highlight">Need</span>
+                </a>
+            </div>
+            
+            <div class="navbar-links" id="navbarLinks">
+                <a href="#" onclick="goBackToDashboard(); return false;"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+            </div>
         </div>
+    </nav>
 
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <div class="dashboard-container">
+        <div class="container" style="max-width: 900px;">
+            
+            <!-- Page Header -->
+            <div class="welcome-section" style="margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                <div>
+                    <h2>My Blood Requests</h2>
+                    <p style="color: var(--secondary-gray); font-size: 0.95rem; margin-top: 5px;">View, map, and track your active blood donation requests.</p>
+                </div>
+                <button onclick="window.location.href='request-blood.html'" class="btn-primary" style="width: auto; padding: 10px 20px; border-radius: 8px;">
+                    <i class="fas fa-plus"></i> New Request
+                </button>
+            </div>
 
-        <button
-            onclick="window.location.href='request-blood.html'"
-        >
-
-            + New Request
-
-        </button>
-
-
+            <!-- Requests Container -->
+            <div id="requestsContainer" class="requests-container" style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="dashboard-card" style="text-align: center; padding: 40px;">
+                    <p class="loading" style="color: var(--secondary-gray); font-weight: 600; margin: 0;">
+                        <i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i> Loading requests...
+                    </p>
+                </div>
+            </div>
+            
+        </div>
     </div>
 
-
-    <div
-        id="requestsContainer"
-        class="requests-container"
-    >
-
-        <p class="loading">
-
-            Loading requests...
-
-        </p>
-
-    </div>
-
-
-</main>
-
-
-<!-- Leaflet Map JavaScript -->
-
-<script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-></script>
-
-
-<!-- Your JavaScript -->
-
-<script
-    src="../src/js/my-requests.js?v=4"
-></script>
-
-
+    <!-- Leaflet Map JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Script Controllers -->
+    <script src="../src/js/my-requests.js?v=5"></script>
+    
+    <script>
+        function goBackToDashboard() {
+            const user = JSON.parse(localStorage.getItem("user") || "{}");
+            const role = (user.role || "").toLowerCase();
+            if (role === "donor") {
+                window.location.href = "donor-dashboard.html";
+            } else if (role === "patient") {
+                window.location.href = "patient-dashboard.html";
+            } else if (role === "hospital") {
+                window.location.href = "hospital-dashboard.html";
+            } else if (role === "admin") {
+                window.location.href = "admin-dashboard.html";
+            } else {
+                window.location.href = "login.html";
+            }
+        }
+    </script>
 </body>
-
 </html>

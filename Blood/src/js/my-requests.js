@@ -16,7 +16,7 @@ async function loadMyRequests() {
   }
 
   const role = localStorage.getItem("role");
-  if (role !== "PATIENT") {
+  if (role !== "PATIENT" && role !== "DONOR") {
     goBackToDashboard();
     return;
   }
