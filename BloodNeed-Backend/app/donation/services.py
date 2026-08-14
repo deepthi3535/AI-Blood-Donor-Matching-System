@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from re import match
 
 from app import db
@@ -140,6 +140,7 @@ def create_donation(data):
     # Donor becomes temporarily unavailable
 
     donor.availability = False
+    donor.next_eligible_date = date.today() + timedelta(days=90)
 
 
     # Update reliability score safely
