@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "http://127.0.0.1:5000/api";
 
 const token = localStorage.getItem("token");
 
@@ -18,7 +18,7 @@ async function loadNotifications() {
 
   try {
     const response = await fetch(
-      `${API_URL}/api/notifications/`,
+      `${API_URL}/notifications/`,
 
       {
         method: "GET",
@@ -153,7 +153,7 @@ switch (notification.type || notification.notification_type) {
 async function markAsRead(notificationId) {
   try {
     const response = await fetch(
-      `${API_URL}/api/notifications/${notificationId}/read`,
+      `${API_URL}/notifications/${notificationId}/read`,
 
       {
         method: "PATCH",

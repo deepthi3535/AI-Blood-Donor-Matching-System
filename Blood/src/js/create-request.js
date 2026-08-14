@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "http://127.0.0.1:5000/api";
 
 const requestForm = document.getElementById("requestForm");
 const requestMessage = document.getElementById("requestMessage");
@@ -70,7 +70,7 @@ requestForm.addEventListener("submit", async function (event) {
   };
 
   try {
-    const response = await fetch(`${API_URL}/api/requests/`, {
+    const response = await fetch(`${API_URL}/requests/`, {
       method: "POST",
 
       headers: {

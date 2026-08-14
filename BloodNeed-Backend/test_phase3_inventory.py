@@ -43,7 +43,9 @@ class TestPhase3Inventory(unittest.TestCase):
         os.environ["EMAIL_VERIFICATION_DEV_MODE"] = "true"
 
         from app.models.hospital_transfer import HospitalTransfer
+        from app.models.email_verification import EmailVerification
         # Clear test data in correct foreign key order
+        db.session.query(EmailVerification).delete()
         db.session.query(Notification).delete()
         db.session.query(ResponseHistory).delete()
         db.session.query(DonorMatch).delete()

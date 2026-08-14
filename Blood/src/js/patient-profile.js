@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "http://127.0.0.1:5000/api";
 
 const token = localStorage.getItem("token");
 
@@ -33,7 +33,7 @@ form.addEventListener("submit", async function (event) {
 
   try {
     const response = await fetch(
-      API_URL + "/api/patients/",
+      API_URL + "/patients/",
 
       {
         method: "POST",

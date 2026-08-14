@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "http://127.0.0.1:5000/api";
 
 document.addEventListener("DOMContentLoaded", () => {
     const token = localStorage.getItem("token");
@@ -32,7 +32,7 @@ async function loadHospitalProfile() {
     const hospitalInfoContainer = document.getElementById("hospitalInfo");
 
     try {
-        const response = await fetch(`${API_URL}/api/hospitals/profile`, {
+        const response = await fetch(`${API_URL}/hospitals/profile`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -65,7 +65,7 @@ async function loadHospitalInventory() {
     const lastUpdatedSpan = document.getElementById("lastUpdated");
 
     try {
-        const response = await fetch(`${API_URL}/api/hospitals/inventory`, {
+        const response = await fetch(`${API_URL}/hospitals/inventory`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -131,7 +131,7 @@ async function handleInventoryAdjustment(event) {
     formMessage.textContent = "";
 
     try {
-        const response = await fetch(`${API_URL}/api/hospitals/inventory/adjust`, {
+        const response = await fetch(`${API_URL}/hospitals/inventory/adjust`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -176,7 +176,7 @@ async function loadTransfers() {
 
     // Load Incoming
     try {
-        const response = await fetch(`${API_URL}/api/hospitals/transfers/incoming`, {
+        const response = await fetch(`${API_URL}/hospitals/transfers/incoming`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
         const result = await response.json();
@@ -208,7 +208,7 @@ async function loadTransfers() {
 
     // Load Outgoing
     try {
-        const response = await fetch(`${API_URL}/api/hospitals/transfers/outgoing`, {
+        const response = await fetch(`${API_URL}/hospitals/transfers/outgoing`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
         const result = await response.json();
@@ -237,7 +237,7 @@ async function approveTransfer(transferId) {
     if (!confirm("Are you sure you want to approve this transfer? Inventory will be deducted immediately.")) return;
 
     try {
-        const response = await fetch(`${API_URL}/api/hospitals/transfers/${transferId}/approve`, {
+        const response = await fetch(`${API_URL}/hospitals/transfers/${transferId}/approve`, {
             method: "POST",
             headers: { "Authorization": `Bearer ${token}` }
         });
@@ -258,7 +258,7 @@ async function rejectTransfer(transferId) {
     if (!confirm("Are you sure you want to reject this transfer request?")) return;
 
     try {
-        const response = await fetch(`${API_URL}/api/hospitals/transfers/${transferId}/reject`, {
+        const response = await fetch(`${API_URL}/hospitals/transfers/${transferId}/reject`, {
             method: "POST",
             headers: { "Authorization": `Bearer ${token}` }
         });

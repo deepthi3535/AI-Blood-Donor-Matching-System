@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "http://127.0.0.1:5000/api";
 
 const token = localStorage.getItem("token");
 
@@ -27,7 +27,7 @@ async function loadMyRequests() {
 
   try {
     const response = await fetch(
-      `${API_URL}/api/requests/`,
+      `${API_URL}/requests/`,
 
       {
         method: "GET",
@@ -595,7 +595,7 @@ async function cancelRequest(requestId) {
 
   try {
     const response = await fetch(
-      `${API_URL}/api/requests/${requestId}/cancel`,
+      `${API_URL}/requests/${requestId}/cancel`,
 
       {
         method: "PATCH",
@@ -642,7 +642,7 @@ async function completeDonation(requestId) {
 
   try {
     const response = await fetch(
-      `${API_URL}/api/requests/${requestId}/complete`,
+      `${API_URL}/requests/${requestId}/complete`,
       {
         method: "PATCH",
         headers: {

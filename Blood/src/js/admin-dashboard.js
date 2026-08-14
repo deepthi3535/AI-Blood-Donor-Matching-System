@@ -1,4 +1,5 @@
-const API_URL = "http://127.0.0.1:5000/api/admin";
+const API_URL = "http://127.0.0.1:5000/api";
+const ADMIN_API_URL = `${API_URL}/admin`;
 
 const token = localStorage.getItem("token");
 
@@ -45,7 +46,7 @@ async function api(url) {
 // ================================
 
 async function loadSummary() {
-  const data = await api(`${API_URL}/dashboard`);
+  const data = await api(`${ADMIN_API_URL}/dashboard`);
 
   document.getElementById("summaryCards").innerHTML = `
 
@@ -101,7 +102,7 @@ async function loadSummary() {
 // ================================
 
 async function loadUsers() {
-  const users = await api(`${API_URL}/users`);
+  const users = await api(`${ADMIN_API_URL}/users`);
 
   let html = `
 
@@ -173,7 +174,7 @@ async function toggleUser(id, active) {
   const endpoint = active ? "block" : "unblock";
 
   await fetch(
-    `${API_URL}/users/${id}/${endpoint}`,
+    `${ADMIN_API_URL}/users/${id}/${endpoint}`,
 
     {
       method: "PATCH",
@@ -194,7 +195,7 @@ async function toggleUser(id, active) {
 async function deleteUser(id) {
   if (!confirm("Delete user?")) return;
 
-  const response = await fetch(`${API_URL}/users/${id}`, {
+  const response = await fetch(`${ADMIN_API_URL}/users/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -216,7 +217,7 @@ async function deleteUser(id) {
 async function loadDonors() {
 
     const donors = await api(
-        `${API_URL}/donors`
+        `${ADMIN_API_URL}/donors`
     );
 
     let html = `
@@ -289,7 +290,7 @@ Delete
 async function deleteDonor(id) {
   if (!confirm("Delete donor?")) return;
 
-  const response = await fetch(`${API_URL}/donors/${id}`, {
+  const response = await fetch(`${ADMIN_API_URL}/donors/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -313,7 +314,7 @@ async function deleteDonor(id) {
 async function loadPatients() {
 
     const patients = await api(
-        `${API_URL}/patients`
+        `${ADMIN_API_URL}/patients`
     );
 
     let html = `
@@ -379,7 +380,7 @@ Delete
 async function deletePatient(id) {
   if (!confirm("Delete patient?")) return;
 
-  const response = await fetch(`${API_URL}/patients/${id}`, {
+  const response = await fetch(`${ADMIN_API_URL}/patients/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -403,7 +404,7 @@ async function deletePatient(id) {
 async function loadRequests() {
 
     const requests = await api(
-        `${API_URL}/requests`
+        `${ADMIN_API_URL}/requests`
     );
 
     let html = `
@@ -473,7 +474,7 @@ Delete
 async function deleteRequest(id) {
   if (!confirm("Delete Request?")) return;
 
-  const response = await fetch(`${API_URL}/requests/${id}`, {
+  const response = await fetch(`${ADMIN_API_URL}/requests/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -495,7 +496,7 @@ async function deleteRequest(id) {
 async function loadDonations() {
 
     const donations = await api(
-        `${API_URL}/donations`
+        `${ADMIN_API_URL}/donations`
     );
 
     let html = `
@@ -567,7 +568,7 @@ Delete
 async function deleteDonation(id) {
   if (!confirm("Delete Donation?")) return;
 
-  const response = await fetch(`${API_URL}/donations/${id}`, {
+  const response = await fetch(`${ADMIN_API_URL}/donations/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -591,7 +592,7 @@ async function deleteDonation(id) {
 async function loadMatches() {
 
     const matches = await api(
-        `${API_URL}/matches`
+        `${ADMIN_API_URL}/matches`
     );
 
     let html = `
@@ -663,7 +664,7 @@ Delete
 async function deleteMatch(id) {
   if (!confirm("Delete Match?")) return;
 
-  const response = await fetch(`${API_URL}/matches/${id}`, {
+  const response = await fetch(`${ADMIN_API_URL}/matches/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -687,7 +688,7 @@ async function deleteMatch(id) {
 async function loadAnalytics() {
 
     const analytics = await api(
-        `${API_URL}/analytics`
+        `${ADMIN_API_URL}/analytics`
     );
 
     document.getElementById(
@@ -792,7 +793,7 @@ async function loadAnalytics() {
 //).onclick = () => {
 
    // window.open(
-     //   `${API_URL}/reports/donors`,
+     //   `${ADMIN_API_URL}/reports/donors`,
        // "_blank"
     //);
 
@@ -826,19 +827,19 @@ async function downloadReport(url, filename) {
 }
 
 document.getElementById("downloadDonorReport").onclick = () => {
-    downloadReport(`${API_URL}/reports/donors`, "donor_report.csv");
+    downloadReport(`${ADMIN_API_URL}/reports/donors`, "donor_report.csv");
 };
 
 document.getElementById("downloadPatientReport").onclick = () => {
-    downloadReport(`${API_URL}/reports/patients`, "patient_report.csv");
+    downloadReport(`${ADMIN_API_URL}/reports/patients`, "patient_report.csv");
 };
 
 document.getElementById("downloadRequestReport").onclick = () => {
-    downloadReport(`${API_URL}/reports/requests`, "request_report.csv");
+    downloadReport(`${ADMIN_API_URL}/reports/requests`, "request_report.csv");
 };
 
 document.getElementById("downloadDonationReport").onclick = () => {
-    downloadReport(`${API_URL}/reports/donations`, "donation_report.csv");
+    downloadReport(`${ADMIN_API_URL}/reports/donations`, "donation_report.csv");
 };
 // ================================
 // INITIAL LOAD

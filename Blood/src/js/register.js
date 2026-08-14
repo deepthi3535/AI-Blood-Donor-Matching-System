@@ -1,6 +1,6 @@
 console.log("REGISTER JS LOADED");
 
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "http://127.0.0.1:5000/api";
 
 const registerForm = document.getElementById("registerForm");
 const role = document.getElementById("role");
@@ -186,7 +186,7 @@ registerForm.addEventListener("submit", async (event) => {
 
   try {
     const response = await fetch(
-      API_URL + "/api/auth/register",
+      API_URL + "/auth/register",
 
       {
         method: "POST",
@@ -259,7 +259,7 @@ document.getElementById("otpForm").addEventListener("submit", async (event) => {
   const email = document.getElementById("otpEmailDisplay").textContent.trim();
 
   try {
-    const response = await fetch(`${API_URL}/api/auth/verify-email`, {
+    const response = await fetch(`${API_URL}/auth/verify-email`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, otp })
@@ -282,7 +282,7 @@ document.getElementById("resendOtpBtn").addEventListener("click", async () => {
   const email = document.getElementById("otpEmailDisplay").textContent.trim();
 
   try {
-    const response = await fetch(`${API_URL}/api/auth/resend-otp`, {
+    const response = await fetch(`${API_URL}/auth/resend-otp`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email })

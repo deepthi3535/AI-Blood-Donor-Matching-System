@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "http://127.0.0.1:5000/api";
 
 const token = localStorage.getItem("token");
 
@@ -23,7 +23,7 @@ const logoutBtn = document.getElementById("logoutBtn");
 
 async function loadDashboard() {
   try {
-    const response = await fetch(`${API_URL}/api/patients/dashboard`, {
+    const response = await fetch(`${API_URL}/patients/dashboard`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -106,7 +106,7 @@ recentActivity.innerHTML = "";
 }
 async function loadRequests() {
   try {
-    const response = await fetch(`${API_URL}/api/patients/requests`, {
+    const response = await fetch(`${API_URL}/patients/requests`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

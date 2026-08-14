@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:5000";
+const API_URL = "http://127.0.0.1:5000/api";
 
 document.getElementById("otpForm").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -7,7 +7,7 @@ document.getElementById("otpForm").addEventListener("submit", async (e) => {
 
   const otp = document.getElementById("otp").value;
 
-  const response = await fetch(`${API}/api/auth/verify-otp`, {
+  const response = await fetch(`${API_URL}/auth/verify-email`, {
     method: "POST",
 
     headers: {

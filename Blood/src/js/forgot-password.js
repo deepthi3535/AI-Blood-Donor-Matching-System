@@ -1,11 +1,11 @@
-const API = "http://127.0.0.1:5000";
+const API_URL = "http://127.0.0.1:5000/api";
 
 document.getElementById("forgotForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const email = document.getElementById("email").value;
 
-  const response = await fetch(`${API}/api/auth/forgot-password`, {
+  const response = await fetch(`${API_URL}/auth/forgot-password`, {
     method: "POST",
 
     headers: {

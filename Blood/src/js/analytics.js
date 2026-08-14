@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "http://127.0.0.1:5000/api";
 
 const token = localStorage.getItem("token");
 
@@ -11,7 +11,7 @@ const analyticsContainer = document.getElementById("analyticsContainer");
 async function loadAnalytics() {
   try {
     const response = await fetch(
-      `${API_URL}/api/admin/analytics`,
+      `${API_URL}/admin/analytics`,
 
       {
         method: "GET",

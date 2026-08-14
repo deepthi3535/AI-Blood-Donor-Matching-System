@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "http://127.0.0.1:5000/api";
 
 const requestForm =
 document.getElementById("requestForm");
@@ -210,7 +210,7 @@ try {
   const response =
     await fetch(
 
-      `${API_URL}/api/requests/`,
+      `${API_URL}/requests/`,
 
       {
 

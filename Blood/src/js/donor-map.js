@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "http://127.0.0.1:5000/api";
 
 const token = localStorage.getItem("token");
 const requestId = localStorage.getItem("selected_request_id");
@@ -20,7 +20,7 @@ if (!token || !requestId) {
 
 async function loadMap() {
   try {
-    const response = await fetch(`${API_URL}/api/matching/${requestId}`, {
+    const response = await fetch(`${API_URL}/matching/${requestId}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

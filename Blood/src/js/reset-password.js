@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:5000";
+const API_URL = "http://127.0.0.1:5000/api";
 
 document.getElementById("resetForm").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -15,8 +15,8 @@ document.getElementById("resetForm").addEventListener("submit", async (e) => {
 
   const email = localStorage.getItem("reset_email");
 
-  const response = await fetch(`${API}/api/auth/reset-password`, {
-    method: "POST",
+  const response = await fetch(`${API_URL}/auth/reset-password`, {
+    method: "PUT",
 
     headers: {
       "Content-Type": "application/json",

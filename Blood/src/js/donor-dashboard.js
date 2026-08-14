@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "http://127.0.0.1:5000/api";
 
 const token = localStorage.getItem("token");
 
@@ -35,7 +35,7 @@ async function loadDonorDashboard() {
 
   console.log("TOKEN:", token);
   try {
-    const response = await fetch(`${API_URL}/api/donors/dashboard`, {
+    const response = await fetch(`${API_URL}/donors/dashboard`, {
       method: "GET",
 
       headers: {
@@ -284,7 +284,7 @@ async function loadIncomingRequests() {
 
   try {
     const response = await fetch(
-      `${API_URL}/api/donors/requests`,
+      `${API_URL}/donors/requests`,
 
       {
         method: "GET",
@@ -752,7 +752,7 @@ async function updateAvailability() {
   const availability = select.value === "true";
 
   try {
-    const response = await fetch(`${API_URL}/api/donors/availability`, {
+    const response = await fetch(`${API_URL}/donors/availability`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -800,7 +800,7 @@ async function respondToRequest(matchId, response) {
     .querySelectorAll(".accept-button,.reject-button")
     .forEach((btn) => (btn.disabled = true));
   try {
-    const result = await fetch(`${API_URL}/api/donors/requests/${matchId}/respond`, {
+    const result = await fetch(`${API_URL}/donors/requests/${matchId}/respond`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
