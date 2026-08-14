@@ -127,29 +127,41 @@ if (data.recent_activities.length === 0) {
   }
 }
 // ==========================================
-// Logout
-// ==========================================
-
-const logoutBtn = document.getElementById("logoutBtn");
-
-if (logoutBtn) {
-  logoutBtn.addEventListener(
-    "click",
-
-    function () {
-      localStorage.removeItem("token");
-
-      localStorage.removeItem("user");
-
-      localStorage.removeItem("patient_id");
-
-      window.location.href = "login.html";
-    },
-  );
-}
-
-// ==========================================
 // Load Dashboard
 // ==========================================
 
 loadPatientDashboard();
+
+// Profile Dropdown Actions
+document.addEventListener("DOMContentLoaded", () => {
+  const userStr = localStorage.getItem("user");
+  if (userStr) {
+    const user = JSON.parse(userStr);
+    const nameEl = document.getElementById("headerProfileName");
+    const roleEl = document.getElementById("headerProfileRole");
+    if (nameEl) nameEl.textContent = user.full_name || user.email || "User";
+    if (roleEl) roleEl.textContent = user.role || "Role";
+  }
+
+  const trigger = document.getElementById("profileTrigger");
+  const menu = document.getElementById("profileDropdownMenu");
+  if (trigger && menu) {
+    trigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      menu.classList.toggle("show");
+    });
+    document.addEventListener("click", (e) => {
+      if (!trigger.contains(e.target) && !menu.contains(e.target)) {
+        menu.classList.remove("show");
+      }
+    });
+  }
+
+  const dropdownLogoutBtn = document.getElementById("dropdownLogoutBtn");
+  if (dropdownLogoutBtn) {
+    dropdownLogoutBtn.addEventListener("click", () => {
+      localStorage.clear();
+      window.location.href = "login.html";
+    });
+  }
+});

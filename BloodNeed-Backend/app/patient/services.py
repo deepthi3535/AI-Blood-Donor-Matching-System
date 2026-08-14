@@ -60,6 +60,19 @@ def update_patient(patient, data):
         if field in data:
             setattr(patient, field, data[field])
 
+    # Also update linked User record's name, email, and phone
+    from app.models.user import User
+    user = User.query.get(patient.user_id)
+    if user:
+        if "full_name" in data:
+            user.full_name = data["full_name"]
+        if "name" in data:
+            user.full_name = data["name"]
+        if "email" in data:
+            user.email = data["email"]
+        if "phone" in data:
+            user.phone = data["phone"]
+
     db.session.commit()
 
     return patient

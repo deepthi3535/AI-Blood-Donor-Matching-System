@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>🩸 BloodNeed - AI-Driven Blood Donation Network</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="src/assets/css/style.css">
+    <link rel="stylesheet" href="src/assets/css/responsive.css">
+    <link rel="stylesheet" href="src/assets/css/components.css">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+
+    <!-- ==================== NAVIGATION ==================== -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <a href="index.html">
+                    <span style="color: var(--primary-red); font-size: 1.8rem;">🩸</span>
+                    <span>BloodNeed</span>
+                </a>
+                <span class="logo-tag">AI-Driven Blood Donation Network</span>
+            </div>
+            
+            <div class="navbar-links" id="navbarLinks">
+                <a href="index.html" class="active">Home</a>
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#ai-engine">AI Matcher</a>
+                <a href="pages/login.html" class="btn btn-outline">Login</a>
+                <a href="pages/register.html" class="btn btn-primary">Register</a>
+                <button id="themeToggle" class="theme-toggle" title="Toggle Theme">🌙</button>
+            </div>
+            
+            <button class="hamburger" id="hamburger" aria-label="Menu" style="display: none;">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ==================== HERO SECTION ==================== -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <i class="fas fa-microchip"></i> Real-time AI Matching Network
+                    </div>
+                    <h1 class="hero-title">Save Lives with a <span>Click</span></h1>
+                    <p class="hero-desc">
+                        Intelligent GPS-based blood donor matching connecting patients, active donors, and regional hospitals when every second matters.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="pages/register.html?type=donor" class="btn btn-primary btn-lg">
+                            <i class="fas fa-user-plus"></i> Join as Donor
+                        </a>
+                        <a href="pages/request-blood.html" class="btn btn-emergency btn-lg">
+                            <i class="fas fa-ambulance"></i> Request Blood
+                        </a>
+                    </div>
+                    <div class="hero-trust-list">
+                        <span class="trust-item"><i class="fas fa-check-circle"></i> AI Matching</span>
+                        <span class="trust-item"><i class="fas fa-check-circle"></i> Real-Time Alerts</span>
+                        <span class="trust-item"><i class="fas fa-check-circle"></i> GPS Routing</span>
+                    </div>
+                </div>
+                
+                <!-- Ecosystem Visual representation -->
+                <div class="hero-visual">
+                    <div class="eco-visual-card">
+                        <div class="eco-header">
+                            <i class="fas fa-network-wired"></i> Ecosystem Pipeline
+                        </div>
+                        <div class="eco-pipeline">
+                            <div class="eco-node">
+                                <span class="node-label">🩸 Patient Request</span>
+                                <span class="node-desc">Critical Level</span>
+                            </div>
+                            <div class="eco-connector"><i class="fas fa-arrow-down"></i></div>
+                            <div class="eco-node" style="border-color: var(--primary-red); background: var(--primary-light); color: var(--primary-red);">
+                                <span class="node-label">🤖 AI Prediction Engine</span>
+                                <span class="node-desc">98.4% Match Acc</span>
+                            </div>
+                            <div class="eco-connector"><i class="fas fa-arrow-down"></i></div>
+                            <div class="eco-node">
+                                <span class="node-label">🏥 Hospital Transfer / Donor Match</span>
+                                <span class="node-desc">Immediate Dispatch</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Floating visual elements -->
+                    <div class="floating-mockup left">
+                        <div class="mockup-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="mockup-details">
+                            <h5>O+ Match Found</h5>
+                            <p>1.2 km away • 99% Likelihood</p>
+                        </div>
+                    </div>
+                    
+                    <div class="floating-mockup right">
+                        <div class="mockup-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="mockup-details">
+                            <h5>OTP Verified</h5>
+                            <p>Transaction Logged</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== LIVE STATISTICS ==================== -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-container">
+                <div class="stat-premium-card">
+                    <div class="stat-icon-wrapper"><i class="fas fa-users"></i></div>
+                    <span class="stat-count" id="liveDonors">0</span>
+                    <span class="stat-desc">Live Donors Available</span>
+                </div>
+                <div class="stat-premium-card">
+                    <div class="stat-icon-wrapper"><i class="fas fa-tint"></i></div>
+                    <span class="stat-count" id="requestsToday">0</span>
+                    <span class="stat-desc">Requests Handled Today</span>
+                </div>
+                <div class="stat-premium-card">
+                    <div class="stat-icon-wrapper"><i class="fas fa-heartbeat"></i></div>
+                    <span class="stat-count" id="livesSaved">0</span>
+                    <span class="stat-desc">Lives Impacted / Saved</span>
+                </div>
+                <div class="stat-premium-card">
+                    <div class="stat-icon-wrapper"><i class="fas fa-bolt"></i></div>
+                    <span class="stat-count" id="responseTime">0</span>
+                    <span class="stat-desc">Avg Response Time (min)</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== LIVE DONOR MAP ==================== -->
+    <section class="map-preview-section" id="mapPreview">
+        <div class="container">
+            <div class="section-header">
+                <h2>Live Donor Network Map</h2>
+                <p>Real-time display of compatible active donors in the immediate area</p>
+            </div>
+            
+            <div class="map-card">
+                <div class="map-card-header">
+                    <div class="live-badge">
+                        <div class="live-pulse-dot"></div>
+                        <span>Live Network Active</span>
+                    </div>
+                    <a href="pages/donor-map.html" class="btn btn-outline btn-sm">
+                        <i class="fas fa-expand"></i> View Fullscreen Map
+                    </a>
+                </div>
+                <div class="map-body-wrapper">
+                    <div id="homeMap" style="height: 400px; width: 100%;"></div>
+                    <div class="map-floating-overlay">
+                        <h4 style="font-size: 0.95rem; margin-bottom: 8px; font-weight: 700; color: var(--primary-red);">Nearest Match Preview</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Distance: 1.2 km | Group: A+</p>
+                        <a href="pages/register.html" class="btn btn-primary btn-sm" style="width: 100%; text-align: center; justify-content: center;">
+                            Get Matched
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FEATURES SECTION ==================== -->
+    <section class="features" id="features" style="background-color: var(--bg-light); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 80px 0;">
+        <div class="container">
+            <div class="section-header">
+                <h2>Platform Features</h2>
+                <p>Intelligent architecture designed to minimize request fulfillment delays</p>
+            </div>
+            
+            <div class="features-container">
+                <div class="feature-premium-card">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <h3>GPS Matching</h3>
+                    <p>Calculates precise distance metrics and matches request locations using real-time Geolocation APIs.</p>
+                    <span class="feature-card-tag">Real-Time</span>
+                </div>
+                <div class="feature-premium-card">
+                    <i class="fas fa-brain"></i>
+                    <h3>Smart Ranking</h3>
+                    <p>Ranks potential matching donors by compatibility, distance, active availability, and historic responses.</p>
+                    <span class="feature-card-tag">AI Powered</span>
+                </div>
+                <div class="feature-premium-card">
+                    <i class="fas fa-warehouse"></i>
+                    <h3>Hospital Inventory</h3>
+                    <p>Integrates with direct hospital blood stores to fulfill critical needs locally from reserve stock first.</p>
+                    <span class="feature-card-tag">Inventory</span>
+                </div>
+                <div class="feature-premium-card">
+                    <i class="fas fa-random"></i>
+                    <h3>Cross-Hospital Transfer</h3>
+                    <p>Coordinates atomic, double-locked regional blood transfers between nearby network hospitals.</p>
+                    <span class="feature-card-tag">Coordinated</span>
+                </div>
+                <div class="feature-premium-card">
+                    <i class="fas fa-sms"></i>
+                    <h3>Email OTP Hashing</h3>
+                    <p>Secures donation logs, password recoveries, and registration steps using robust timed email verifications.</p>
+                    <span class="feature-card-tag">Security</span>
+                </div>
+                <div class="feature-premium-card">
+                    <i class="fas fa-bell"></i>
+                    <h3>Real-Time Alerts</h3>
+                    <p>Generates socket-based immediate push notifications and queues fallback donor alerts dynamically.</p>
+                    <span class="feature-card-tag">Alerts</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== HOW IT WORKS ==================== -->
+    <section class="how-it-works" id="how-it-works" style="padding: 80px 0; background-color: var(--surface);">
+        <div class="container">
+            <div class="section-header">
+                <h2>Platform Workflow</h2>
+                <p>The structured pipeline through which emergency blood needs are resolved</p>
+            </div>
+            
+            <div class="timeline-steps">
+                <div class="timeline-step">
+                    <div class="timeline-number">1</div>
+                    <h4>Request Submission</h4>
+                    <p>Patient/hospital logs a blood request indicating volume, type, and urgency.</p>
+                </div>
+                <div class="timeline-connector"><i class="fas fa-chevron-right"></i></div>
+                <div class="timeline-step">
+                    <div class="timeline-number">2</div>
+                    <h4>Inventory Checking</h4>
+                    <p>The system checks native hospital stock levels to satisfy requests instantly.</p>
+                </div>
+                <div class="timeline-connector"><i class="fas fa-chevron-right"></i></div>
+                <div class="timeline-step">
+                    <div class="timeline-number">3</div>
+                    <h4>Regional Transfer</h4>
+                    <p>If local stock is insufficient, nearby hospital balances are queried and transferred.</p>
+                </div>
+                <div class="timeline-connector"><i class="fas fa-chevron-right"></i></div>
+                <div class="timeline-step">
+                    <div class="timeline-number">4</div>
+                    <h4>AI Donor Matching</h4>
+                    <p>If hospital stocks cannot cover it, the AI matches and triggers push alerts to ranked donors.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== AI ENGINE SECTION ==================== -->
+    <section id="ai-engine" style="padding: 80px 0; background-color: var(--bg-light); border-top: 1px solid var(--border);">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-visual">
+                    <div class="eco-visual-card" style="padding: 30px;">
+                        <h4 style="font-size: 1.1rem; margin-bottom: 20px; font-weight: 800;"><i class="fas fa-microchip" style="color: var(--primary-red);"></i> Intelligent Parameters</h4>
+                        <ul style="list-style: none; display: flex; flex-direction: column; gap: 14px;">
+                            <li style="display: flex; justify-content: space-between; font-size: 0.9rem; border-bottom: 1px solid var(--border); padding-bottom: 6px;">
+                                <span><i class="fas fa-tint" style="color: var(--primary-red); margin-right: 8px;"></i> Blood Compatibility</span>
+                                <span style="font-weight: 700;">Critical Match</span>
+                            </li>
+                            <li style="display: flex; justify-content: space-between; font-size: 0.9rem; border-bottom: 1px solid var(--border); padding-bottom: 6px;">
+                                <span><i class="fas fa-road" style="color: var(--primary-red); margin-right: 8px;"></i> Distance Metric</span>
+                                <span style="font-weight: 700;">Haversine Path</span>
+                            </li>
+                            <li style="display: flex; justify-content: space-between; font-size: 0.9rem; border-bottom: 1px solid var(--border); padding-bottom: 6px;">
+                                <span><i class="fas fa-history" style="color: var(--primary-red); margin-right: 8px;"></i> Reliability History</span>
+                                <span style="font-weight: 700;">Score Rated</span>
+                            </li>
+                            <li style="display: flex; justify-content: space-between; font-size: 0.9rem; padding-bottom: 6px;">
+                                <span><i class="fas fa-toggle-on" style="color: var(--primary-red); margin-right: 8px;"></i> Available Cooldown</span>
+                                <span style="font-weight: 700;">90 Days Verified</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="hero-content">
+                    <div class="hero-badge" style="background: rgba(15, 23, 42, 0.1); color: var(--primary-navy);">
+                        <i class="fas fa-brain"></i> Decision Analytics
+                    </div>
+                    <h2 class="hero-title" style="font-size: 2.8rem; margin-bottom: 16px;">Intelligence Behind BloodNeed</h2>
+                    <p class="hero-desc">
+                        Our recommendation pipeline compiles multiple weight parameters including geographic radius limits, response probability scores, and dynamic emergency flags to rank compatible donors in milliseconds.
+                    </p>
+                    <a href="pages/register.html" class="btn btn-primary"><i class="fas fa-arrow-right"></i> Explore Leaderboard Rules</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== BLOOD GROUPS SECTION ==================== -->
+    <section class="blood-groups" style="padding: 80px 0; background-color: var(--surface);">
+        <div class="container">
+            <div class="section-header">
+                <h2>Network Blood Groups Supported</h2>
+                <p>Dynamic sorting and indexing across all primary blood classifications</p>
+            </div>
+            
+            <div class="blood-groups-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+                <div class="blood-group-card" data-group="A+" style="background: var(--bg-light); padding: 24px; border-radius: var(--border-radius); border: 1px solid var(--border); text-align: center;">
+                    <span class="blood-type" style="font-size: 2rem; font-weight: 800; color: var(--primary-red);">A+</span>
+                    <span class="blood-desc" style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 8px;">Receives A+, A-, O+, O-</span>
+                </div>
+                <div class="blood-group-card" data-group="A-" style="background: var(--bg-light); padding: 24px; border-radius: var(--border-radius); border: 1px solid var(--border); text-align: center;">
+                    <span class="blood-type" style="font-size: 2rem; font-weight: 800; color: var(--primary-red);">A-</span>
+                    <span class="blood-desc" style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 8px;">Receives A-, O-</span>
+                </div>
+                <div class="blood-group-card" data-group="B+" style="background: var(--bg-light); padding: 24px; border-radius: var(--border-radius); border: 1px solid var(--border); text-align: center;">
+                    <span class="blood-type" style="font-size: 2rem; font-weight: 800; color: var(--primary-red);">B+</span>
+                    <span class="blood-desc" style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 8px;">Receives B+, B-, O+, O-</span>
+                </div>
+                <div class="blood-group-card" data-group="B-" style="background: var(--bg-light); padding: 24px; border-radius: var(--border-radius); border: 1px solid var(--border); text-align: center;">
+                    <span class="blood-type" style="font-size: 2rem; font-weight: 800; color: var(--primary-red);">B-</span>
+                    <span class="blood-desc" style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 8px;">Receives B-, O-</span>
+                </div>
+                <div class="blood-group-card" data-group="AB+" style="background: var(--bg-light); padding: 24px; border-radius: var(--border-radius); border: 1px solid var(--border); text-align: center;">
+                    <span class="blood-type" style="font-size: 2rem; font-weight: 800; color: var(--primary-red);">AB+</span>
+                    <span class="blood-desc" style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 8px;">Universal Recipient</span>
+                </div>
+                <div class="blood-group-card" data-group="AB-" style="background: var(--bg-light); padding: 24px; border-radius: var(--border-radius); border: 1px solid var(--border); text-align: center;">
+                    <span class="blood-type" style="font-size: 2rem; font-weight: 800; color: var(--primary-red);">AB-</span>
+                    <span class="blood-desc" style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 8px;">Receives A-, B-, AB-, O-</span>
+                </div>
+                <div class="blood-group-card" data-group="O+" style="background: var(--bg-light); padding: 24px; border-radius: var(--border-radius); border: 1px solid var(--border); text-align: center;">
+                    <span class="blood-type" style="font-size: 2rem; font-weight: 800; color: var(--primary-red);">O+</span>
+                    <span class="blood-desc" style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 8px;">Receives O+, O-</span>
+                </div>
+                <div class="blood-group-card" data-group="O-" style="background: var(--bg-light); padding: 24px; border-radius: var(--border-radius); border: 1px solid var(--border); text-align: center;">
+                    <span class="blood-type" style="font-size: 2rem; font-weight: 800; color: var(--primary-red);">O-</span>
+                    <span class="blood-desc" style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 8px;">Universal Donor</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== ROLES & MEMBERS ==================== -->
+    <section class="testimonials" style="padding: 80px 0; background-color: var(--bg-light); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+        <div class="container">
+            <div class="section-header">
+                <h2>Network Ecosystem Roles</h2>
+                <p>BloodNeed coordinates actions and accounts across three specific modules</p>
+            </div>
+            
+            <div class="role-cards-container">
+                <div class="role-premium-card">
+                    <div class="role-avatar"><i class="fas fa-hand-holding-heart"></i></div>
+                    <h4>Patients</h4>
+                    <span class="role-sub">Fulfillment Requests</span>
+                    <p>Patients submit emergency requirements directly and track the progress of matching actions, transfers, and donor details.</p>
+                </div>
+                
+                <div class="role-premium-card">
+                    <div class="role-avatar"><i class="fas fa-ambulance"></i></div>
+                    <h4>Hospitals</h4>
+                    <span class="role-sub">Inventory Control</span>
+                    <p>Hospitals manage local inventory reserves, log local adjustments, and complete transfers within the regional network.</p>
+                </div>
+                
+                <div class="role-premium-card">
+                    <div class="role-avatar"><i class="fas fa-donor"></i></div>
+                    <h4>Donors</h4>
+                    <span class="role-sub">Verified Volunteers</span>
+                    <p>Donors receive instant matched alerts, confirm responses, check eligibility cooldown statuses, and earn leaderboard points.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CTA SECTION ==================== -->
+    <section class="cta-section" style="padding: 80px 0; background: linear-gradient(135deg, var(--primary-navy), #1E293B); color: white; text-align: center;">
+        <div class="container">
+            <div class="cta-content">
+                <h2 style="font-size: 2.6rem; font-weight: 800; margin-bottom: 12px; letter-spacing: -1px;">Be Part of the BloodNeed Network</h2>
+                <p style="font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 30px;">
+                    Whether you are an active donor saving lives, a hospital managing inventory, or a patient needing immediate assistance, BloodNeed connects you.
+                </p>
+                <div class="cta-buttons" style="display: flex; gap: 16px; justify-content: center;">
+                    <a href="pages/register.html" class="btn btn-primary btn-lg">
+                        <i class="fas fa-user-plus"></i> Register Now
+                    </a>
+                    <a href="pages/login.html" class="btn btn-outline btn-lg" style="color: white !important; border-color: rgba(255,255,255,0.2);">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3 style="font-weight: 800; color: white;">🩸 BloodNeed</h3>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Saving lives through intelligent blood donation matching, tracking, and regional transfer coordination.</p>
+                </div>
+                
+                <div class="footer-col">
+                    <h4 style="color: white; font-weight: 700;">Platform Links</h4>
+                    <ul style="margin-top: 10px;">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="pages/register.html">Register</a></li>
+                        <li><a href="pages/login.html">Login</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4 style="color: white; font-weight: 700;">For Volunteers</h4>
+                    <ul>
+                        <li><a href="pages/donor-dashboard.html">Volunteer Dashboard</a></li>
+                        <li><a href="pages/register.html?type=donor">Become a Donor</a></li>
+                        <li><a href="pages/request-blood.html">Emergency Request</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4 style="color: white; font-weight: 700;">Hospital Network</h4>
+                    <ul>
+                        <li><a href="pages/hospital-dashboard.html">Hospital Portal</a></li>
+                        <li><a href="pages/login.html">Hospital Login</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08);">
+                <p>&copy; 2026 BloodNeed Network. All rights reserved. Designed to ensure fast healthcare fulfillment.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Socket.IO -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="src/assets/js/main.js"></script>
+    <script src="src/assets/js/utils.js"></script>
+    <script src="src/assets/js/api.js?v=4"></script>
+    <script src="src/assets/js/interactive.js?v=4"></script>
+    
+    <script>
+        function animateStats() {
+            const stats = [
+                { id: 'liveDonors', end: 256, duration: 3000 },
+                { id: 'requestsToday', end: 48, duration: 2000 },
+                { id: 'livesSaved', end: 1024, duration: 4000 },
+                { id: 'responseTime', end: 3, duration: 1500 }
+            ];
+
+            stats.forEach(({ id, end, duration }) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+
+                const startTime = performance.now();
+                function update(currentTime) {
+                    const progress = Math.min((currentTime - startTime) / duration, 1);
+                    const value = Math.floor(end * (1 - Math.pow(1 - progress, 4)));
+                    el.textContent = value;
+                    if (progress < 1) requestAnimationFrame(update);
+                }
+                requestAnimationFrame(update);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stats
+            animateStats();
+            
+            // Hamburger menu toggle
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navbarLinks');
+            
+            if (hamburger && navLinks) {
+                hamburger.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                });
+            }
+            
+            // Initialize home map
+            initHomeMap();
+            
+            // Theme toggle listener
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function() {
+                    const currentTheme = document.documentElement.getAttribute('data-theme');
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+                });
+                
+                // Initialize theme from local storage
+                const savedTheme = localStorage.getItem('theme') || 'light';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+            }
+        });
+        
+        // ---------- HOME MAP INITIALIZATION ----------
+        function initHomeMap() {
+            const mapContainer = document.getElementById('homeMap');
+            if (!mapContainer) return;
+            
+            // Default center (Mumbai)
+            const defaultCenter = [19.0760, 72.8777];
+            
+            // Create map
+            const map = L.map('homeMap').setView(defaultCenter, 13);
+            
+            // Add tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            
+            // Try to get user location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        map.setView([lat, lng], 14);
+                        
+                        // Add user marker
+                        L.marker([lat, lng], {
+                            icon: L.icon({
+                                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                                iconSize: [25, 41],
+                                iconAnchor: [12, 41],
+                                popupAnchor: [1, -34],
+                                shadowSize: [41, 41]
+                            })
+                        }).addTo(map)
+                        .bindPopup('📍 Your Location');
+                        
+                        // Add sample donors
+                        addSampleDonors(map, lat, lng);
+                    },
+                    error => {
+                        console.warn('Location error:', error.message);
+                        addSampleDonors(map, defaultCenter[0], defaultCenter[1]);
+                    }
+                );
+            } else {
+                addSampleDonors(map, defaultCenter[0], defaultCenter[1]);
+            }
+            
+            // Handle resize
+            window.addEventListener('resize', function() {
+                setTimeout(() => map.invalidateSize(), 200);
+            });
+        }
+        
+        // ---------- ADD SAMPLE DONORS TO MAP ----------
+        function addSampleDonors(map, lat, lng) {
+            const donors = [
+                { name: 'Priya Patel', lat: lat + 0.01, lng: lng + 0.008, blood: 'A+', distance: '1.2 km' },
+                { name: 'Rahul Sharma', lat: lat - 0.007, lng: lng + 0.012, blood: 'O+', distance: '2.5 km' },
+                { name: 'Amit Kumar', lat: lat + 0.015, lng: lng - 0.005, blood: 'B+', distance: '3.8 km' },
+                { name: 'Sneha Reddy', lat: lat - 0.005, lng: lng - 0.01, blood: 'AB-', distance: '1.8 km' },
+                { name: 'Vikram Singh', lat: lat + 0.02, lng: lng + 0.015, blood: 'O-', distance: '4.2 km' }
+            ];
+            
+            donors.forEach(donor => {
+                const marker = L.marker([donor.lat, donor.lng], {
+                    icon: L.icon({
+                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowSize: [41, 41]
+                    })
+                }).addTo(map);
+                
+                marker.bindPopup(`
+                    <div style="padding: 6px;">
+                        <strong>${donor.name}</strong><br>
+                        Blood: ${donor.blood}<br>
+                        Distance: ${donor.distance}
+                    </div>
+                `);
+            });
+        }
+    </script>
+</body>
+</html>

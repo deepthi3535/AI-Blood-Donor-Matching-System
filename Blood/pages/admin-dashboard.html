@@ -25,15 +25,27 @@
 
         <h1>🩸 Admin Dashboard</h1>
 
-        <div>
+        <div style="display: flex; align-items: center; gap: 15px;">
 
             <button id="refreshBtn">
                 Refresh
             </button>
 
-            <button id="logoutBtn">
-                Logout
-            </button>
+            <div class="profile-dropdown-container">
+                <div class="profile-trigger" id="profileTrigger">
+                    <div class="profile-avatar-wrapper">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="profile-meta">
+                        <span class="profile-name" id="headerProfileName">Loading...</span>
+                        <span class="profile-role" id="headerProfileRole">Admin</span>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="profile-dropdown-menu" id="profileDropdownMenu">
+                    <button id="dropdownLogoutBtn" class="dropdown-logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
 
         </div>
 

@@ -181,7 +181,7 @@ def edit_donor(donor_id):
     )
 
     return jsonify(
-        donor.to_dict()
+        donor.to_dict(show_contact=True)
     ), 200
 
 
@@ -359,7 +359,7 @@ def donor_dashboard():
     return jsonify({
 
         "donor":
-            donor.to_dict(),
+            donor.to_dict(show_contact=True),
 
         "total_donations":
             total_donations,

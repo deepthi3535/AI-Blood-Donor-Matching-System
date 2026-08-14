@@ -205,7 +205,21 @@
             <p>Manage blood stock levels and direct fulfillment</p>
         </div>
         <div class="header-actions">
-            <button id="logoutBtn" class="outline-button">Logout</button>
+            <div class="profile-dropdown-container">
+                <div class="profile-trigger" id="profileTrigger">
+                    <div class="profile-avatar-wrapper">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="profile-meta">
+                        <span class="profile-name" id="headerProfileName">Loading...</span>
+                        <span class="profile-role" id="headerProfileRole">Hospital</span>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="profile-dropdown-menu" id="profileDropdownMenu">
+                    <button id="dropdownLogoutBtn" class="dropdown-logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
         </div>
     </header>
 
