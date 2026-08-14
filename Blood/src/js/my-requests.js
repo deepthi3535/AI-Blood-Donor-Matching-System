@@ -15,6 +15,12 @@ async function loadMyRequests() {
     return;
   }
 
+  const role = localStorage.getItem("role");
+  if (role !== "PATIENT") {
+    goBackToDashboard();
+    return;
+  }
+
   requestsContainer.innerHTML = `
 
     <p class="loading">
@@ -681,6 +687,8 @@ function goBackToDashboard() {
     window.location.href = "donor-dashboard.html";
   } else if (role === "PATIENT") {
     window.location.href = "patient-dashboard.html";
+  } else if (role === "HOSPITAL") {
+    window.location.href = "hospital-dashboard.html";
   } else if (role === "ADMIN") {
     window.location.href = "admin-dashboard.html";
   } else {

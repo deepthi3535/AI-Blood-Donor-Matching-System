@@ -186,8 +186,15 @@ if (response.status === 401) {
 
 function openRequest(requestId) {
   localStorage.setItem("selected_request_id", requestId);
+  const role = localStorage.getItem("role");
 
-  window.location.href = "my-requests.html";
+  if (role === "DONOR") {
+    window.location.href = "donor-dashboard.html";
+  } else if (role === "HOSPITAL") {
+    window.location.href = "hospital-dashboard.html";
+  } else {
+    window.location.href = "my-requests.html";
+  }
 }
 
 // =======================================
