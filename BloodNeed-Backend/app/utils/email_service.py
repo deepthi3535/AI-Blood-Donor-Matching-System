@@ -16,6 +16,7 @@ def send_otp_email(receiver, otp):
     Supports a dev-only logging mode when SMTP is not configured or
     EMAIL_VERIFICATION_DEV_MODE is enabled.
     """
+    print(f"\n[OTP LOG] Generated code for {receiver}: {otp}\n", flush=True)
     dev_mode = os.getenv("EMAIL_VERIFICATION_DEV_MODE", "false").lower() == "true"
     
     mail_server = os.getenv("MAIL_SERVER")
