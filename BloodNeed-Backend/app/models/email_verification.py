@@ -1,3 +1,4 @@
+from datetime import datetime
 from app import db
 
 class EmailVerification(db.Model):
@@ -43,7 +44,7 @@ class EmailVerification(db.Model):
 
     created_at = db.Column(
         db.DateTime,
-        server_default=db.func.now()
+        default=datetime.utcnow
     )
 
     last_resend_at = db.Column(

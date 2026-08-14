@@ -139,9 +139,16 @@ def register_user(data):
 
         db.session.commit()
 
+        message = "Registration Successful."
+        if role in ["DONOR", "PATIENT", "HOSPITAL"]:
+            message = "Registration successful. Please verify your email."
+            dev_mode = os.getenv("EMAIL_VERIFICATION_DEV_MODE", "false").lower() == "true" or not os.getenv("MAIL_SERVER") or not os.getenv("MAIL_USERNAME") or not os.getenv("MAIL_PASSWORD")
+            if dev_mode:
+                message += f" (Dev Mode OTP: {otp})"
+
         return {
             "success": True,
-            "message": "Registration successful. Please verify your email." if role in ["DONOR", "PATIENT", "HOSPITAL"] else "Registration Successful."
+            "message": message
         }
     except Exception as e:
         db.session.rollback()

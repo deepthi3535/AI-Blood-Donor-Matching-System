@@ -483,11 +483,13 @@ def resend_otp():
 
     if verification:
         last_time = verification.last_resend_at or verification.created_at
-        if last_time and (datetime.utcnow() - last_time).total_seconds() < 60:
-            return jsonify({
-                "success": False,
-                "message": "Please wait before requesting a new OTP."
-            }), 429
+        if last_time:
+            diff = (datetime.utcnow() - last_time).total_seconds()
+            if 0 <= diff < 60:
+                return jsonify({
+                    "success": False,
+                    "message": "Please wait before requesting a new OTP."
+                }), 429
         # Invalidate previous
         verification.expires_at = datetime.utcnow()
 
@@ -508,9 +510,14 @@ def resend_otp():
     send_otp_email(user.email, otp)
     db.session.commit()
 
+    message = "OTP resent successfully."
+    dev_mode = os.getenv("EMAIL_VERIFICATION_DEV_MODE", "false").lower() == "true" or not os.getenv("MAIL_SERVER") or not os.getenv("MAIL_USERNAME") or not os.getenv("MAIL_PASSWORD")
+    if dev_mode:
+        message += f" (Dev Mode OTP: {otp})"
+
     return jsonify({
         "success": True,
-        "message": "OTP resent successfully."
+        "message": message
     }), 200
 
 
