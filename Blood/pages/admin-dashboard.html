@@ -1,236 +1,1377 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Admin Dashboard</title>
-
-    <link rel="stylesheet" href="../src/assets/css/style.css">
-    <link rel="stylesheet" href="../src/assets/css/components.css">
-    <link rel="stylesheet" href="../src/assets/css/responsive.css">
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - Blood Need</title>
+    
+    <link rel="stylesheet" href="../src/assets/css/style.css" />
+    <link rel="stylesheet" href="../src/assets/css/components.css" />
+    <link rel="stylesheet" href="../src/assets/css/responsive.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <style>
+        /* ============================================
+           ADMIN DASHBOARD CUSTOM STYLES
+           ============================================ */
+        
+        /* ---- Reset & Base ---- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* ---- Admin Navbar ---- */
+        .admin-navbar {
+            background: #ffffff;
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        
+        .admin-navbar .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+        
+        .admin-navbar .brand .blood-icon {
+            color: #DC3545;
+            font-size: 1.6rem;
+        }
+        
+        .admin-navbar .brand .highlight {
+            color: #DC3545;
+        }
+        
+        .admin-navbar .brand .admin-tag {
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: #6C757D;
+            background: #f0f0f0;
+            padding: 2px 10px;
+            border-radius: 50px;
+            margin-left: 4px;
+        }
+        
+        .admin-navbar .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .admin-navbar .nav-actions .btn-icon-nav {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: none;
+            background: #f5f5f5;
+            color: #6C757D;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            position: relative;
+        }
+        
+        .admin-navbar .nav-actions .btn-icon-nav:hover {
+            background: #e8e8e8;
+            color: #DC3545;
+        }
+        
+        .admin-navbar .nav-actions .btn-icon-nav .badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #DC3545;
+            color: white;
+            font-size: 0.55rem;
+            padding: 1px 5px;
+            border-radius: 50%;
+            font-weight: 700;
+        }
+        
+        /* ---- Container ---- */
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem 3rem;
+        }
+        
+        /* ---- Profile Card ---- */
+        .profile-card {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            padding: 1.8rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.8rem;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            position: relative;
+            overflow: hidden;
+            flex-wrap: wrap;
+        }
+        
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #DC3545, #A71D2A);
+        }
+        
+        /* ---- Avatar ---- */
+        .profile-avatar-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #DC3545, #A71D2A);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(220, 53, 69, 0.25);
+        }
+        
+        .profile-avatar-large .edit-avatar-btn {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            background: #ffffff;
+            border: 2px solid #DC3545;
+            color: #DC3545;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .profile-avatar-large .edit-avatar-btn:hover {
+            background: #DC3545;
+            color: white;
+        }
+        
+        /* ---- Profile Info ---- */
+        .profile-info {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .profile-info .name-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 2px;
+        }
+        
+        .profile-info .name-row h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 0;
+            color: #1a1a2e;
+        }
+        
+        .profile-info .role-badge {
+            display: inline-block;
+            background: rgba(220, 53, 69, 0.08);
+            color: #DC3545;
+            padding: 2px 12px;
+            border-radius: 50px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .profile-info .profile-meta {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        
+        .profile-info .profile-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: #6C757D;
+        }
+        
+        .profile-info .profile-meta span i {
+            color: #DC3545;
+            width: 16px;
+            font-size: 0.8rem;
+        }
+        
+        /* ---- Profile Actions ---- */
+        .profile-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        
+        .profile-actions .btn-action {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #e8e8e8;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            color: #6C757D;
+        }
+        
+        .profile-actions .btn-action:hover {
+            border-color: #DC3545;
+            color: #DC3545;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .profile-actions .btn-action.edit-btn {
+            border-color: #DC3545;
+            color: #DC3545;
+        }
+        
+        .profile-actions .btn-action.edit-btn:hover {
+            background: #DC3545;
+            color: white;
+        }
+        
+        .profile-actions .btn-action.logout-btn {
+            border-color: #ffe8e8;
+            color: #DC3545;
+        }
+        
+        .profile-actions .btn-action.logout-btn:hover {
+            background: #DC3545;
+            color: white;
+            border-color: #DC3545;
+        }
+        
+        /* ---- Stats Grid ---- */
+        .stats-grid-admin {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card-admin {
+            background: #ffffff;
+            padding: 1.2rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card-admin:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+        
+        .stat-card-admin .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        
+        .stat-card-admin .stat-header .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+        
+        .stat-card-admin .stat-header .stat-icon.red {
+            background: rgba(220, 53, 69, 0.08);
+            color: #DC3545;
+        }
+        
+        .stat-card-admin .stat-header .stat-icon.green {
+            background: rgba(40, 167, 69, 0.08);
+            color: #28A745;
+        }
+        
+        .stat-card-admin .stat-header .stat-icon.blue {
+            background: rgba(23, 162, 184, 0.08);
+            color: #17A2B8;
+        }
+        
+        .stat-card-admin .stat-header .stat-icon.gold {
+            background: rgba(255, 193, 7, 0.08);
+            color: #FFC107;
+        }
+        
+        .stat-card-admin .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+            color: #1a1a2e;
+        }
+        
+        .stat-card-admin .stat-label {
+            font-size: 0.8rem;
+            color: #6C757D;
+        }
+        
+        /* ---- Dashboard Grid ---- */
+        .dashboard-grid-admin {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+        
+        .dashboard-card-admin {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            margin-bottom: 2rem;
+        }
+        
+        .dashboard-card-admin .card-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dashboard-card-admin .card-header h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin: 0;
+            color: #1a1a2e;
+        }
+        
+        .dashboard-card-admin .card-header h3 i {
+            color: #DC3545;
+            margin-right: 8px;
+        }
+        
+        .dashboard-card-admin .card-body {
+            padding: 1rem 1.5rem;
+            overflow-x: auto;
+        }
+        
+        /* ---- Table Styling ---- */
+        .dashboard-card-admin table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        
+        .dashboard-card-admin th {
+            text-align: left;
+            padding: 12px 14px;
+            font-weight: 600;
+            color: #6C757D;
+            border-bottom: 2px solid #f0f0f0;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .dashboard-card-admin td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #f5f5f5;
+            color: #333;
+            vertical-align: middle;
+        }
+        
+        .dashboard-card-admin tr:hover td {
+            background: rgba(0, 0, 0, 0.01);
+        }
+        
+        /* Action buttons inside tables */
+        .dashboard-card-admin button,
+        .dashboard-card-admin .delete-btn,
+        .dashboard-card-admin .block-btn,
+        .dashboard-card-admin .unblock-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            margin-right: 5px;
+            display: inline-block;
+        }
+        
+        .dashboard-card-admin .delete-btn {
+            background: rgba(220, 53, 69, 0.08);
+            color: #DC3545;
+        }
+        
+        .dashboard-card-admin .delete-btn:hover {
+            background: #DC3545;
+            color: white;
+        }
+        
+        .dashboard-card-admin .block-btn {
+            background: rgba(240, 173, 78, 0.08);
+            color: #f0ad4e;
+        }
+        
+        .dashboard-card-admin .block-btn:hover {
+            background: #f0ad4e;
+            color: white;
+        }
+        
+        .dashboard-card-admin .unblock-btn {
+            background: rgba(92, 184, 92, 0.08);
+            color: #5cb85c;
+        }
+        
+        .dashboard-card-admin .unblock-btn:hover {
+            background: #5cb85c;
+            color: white;
+        }
+        
+        /* ---- Quick Actions ---- */
+        .quick-actions-admin {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 1.2rem 1.5rem;
+        }
+        
+        .quick-action-admin {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: inherit;
+        }
+        
+        .quick-action-admin:hover {
+            background: rgba(220, 53, 69, 0.05);
+            transform: translateY(-2px);
+        }
+        
+        .quick-action-admin i {
+            font-size: 1.3rem;
+            color: #DC3545;
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .quick-action-admin span {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+        
+        /* Search Field */
+        .search-container {
+            margin-bottom: 2rem;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        #searchUser {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.1);
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        #searchUser:focus {
+            border-color: #DC3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+        }
+        
+        /* Reports grid layout */
+        .report-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .report-buttons button {
+            background: #f8f9fa;
+            border: 1px solid rgba(0,0,0,0.05);
+            color: #1a1a2e;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .report-buttons button:hover {
+            background: #DC3545;
+            color: white;
+            border-color: #DC3545;
+        }
+        
+        /* User table special styles */
+        .user-table .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-table .user-cell .avatar-sm {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #6C757D;
+            flex-shrink: 0;
+        }
+        
+        .user-table .user-cell .user-name {
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+        
+        .user-table .user-cell .user-email {
+            font-size: 0.75rem;
+            color: #6C757D;
+        }
+        
+        .user-table .type-tag {
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .user-table .type-tag.donor {
+            background: rgba(220, 53, 69, 0.08);
+            color: #DC3545;
+        }
+        
+        .user-table .type-tag.patient {
+            background: rgba(23, 162, 184, 0.08);
+            color: #17A2B8;
+        }
+        
+        .user-table .status-badge-sm {
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .user-table .status-badge-sm.active {
+            background: rgba(40, 167, 69, 0.08);
+            color: #28A745;
+        }
+        
+        .user-table .status-badge-sm.blocked {
+            background: rgba(220, 53, 69, 0.08);
+            color: #DC3545;
+        }
+        
+        .user-table .action-btn {
+            background: none;
+            border: none;
+            padding: 6px;
+            cursor: pointer;
+            color: #6C757D;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .user-table .action-btn:hover {
+            background: #f5f5f5;
+        }
+        
+        .user-table .action-btn.edit:hover {
+            color: #17A2B8;
+        }
+        
+        .user-table .action-btn.delete:hover {
+            color: #DC3545;
+        }
+        
+        /* Profile Dropdown Container styling */
+        .profile-dropdown-container {
+            position: relative;
+        }
+        
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        
+        .profile-trigger:hover {
+            background: #f5f5f5;
+        }
+        
+        .profile-avatar-wrapper {
+            font-size: 1.5rem;
+            color: #6C757D;
+        }
+        
+        .profile-meta {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+        
+        .profile-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+        
+        .profile-role {
+            font-size: 0.7rem;
+            color: #6C757D;
+        }
+        
+        .profile-dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: white;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            z-index: 1001;
+            min-width: 150px;
+            padding: 8px 0;
+        }
+        
+        .profile-dropdown-menu.show {
+            display: block;
+        }
+        
+        .dropdown-logout-btn {
+            width: 100%;
+            background: none;
+            border: none;
+            text-align: left;
+            padding: 10px 16px;
+            font-size: 0.85rem;
+            color: #DC3545;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .dropdown-logout-btn:hover {
+            background: #fff5f5;
+        }
+        
+        /* ---- Edit Profile Modal ---- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #ffffff;
+            border-radius: 16px;
+            max-width: 580px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            animation: modalFadeIn 0.3s ease;
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 1rem;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1a1a2e;
+            margin: 0;
+        }
+        
+        .modal-header h2 i {
+            color: #DC3545;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6C757D;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            color: #DC3545;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            font-size: 0.8rem;
+            color: #6C757D;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border: 2px solid #e8e8e8;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            background: #ffffff;
+            color: #1a1a2e;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #DC3545;
+            box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.06);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .modal-footer .btn {
+            flex: 1;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 0.9rem;
+        }
+        
+        .modal-footer .btn-secondary {
+            background: #f0f0f0;
+            color: #6C757D;
+        }
+        
+        .modal-footer .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .modal-footer .btn-primary {
+            background: #DC3545;
+            color: white;
+        }
+        
+        .modal-footer .btn-primary:hover {
+            background: #A71D2A;
+        }
+        
+        /* ---- Dark Theme ---- */
+        [data-theme="dark"] {
+            background: #121212;
+            color: #EAEAEA;
+        }
+        
+        [data-theme="dark"] body {
+            background: #121212;
+        }
+        
+        [data-theme="dark"] .admin-navbar {
+            background: #1E1E2E;
+            border-bottom-color: #2C2C3E;
+        }
+        
+        [data-theme="dark"] .admin-navbar .brand {
+            color: #EAEAEA;
+        }
+        
+        [data-theme="dark"] .admin-navbar .brand .admin-tag {
+            background: #2C2C3E;
+            color: #A0A0B0;
+        }
+        
+        [data-theme="dark"] .admin-navbar .nav-actions .btn-icon-nav {
+            background: #2C2C3E;
+            color: #A0A0B0;
+        }
+        
+        [data-theme="dark"] .admin-navbar .nav-actions .btn-icon-nav:hover {
+            background: #3D3D50;
+        }
+        
+        [data-theme="dark"] .profile-card {
+            background: #1E1E2E;
+            border-color: #2C2C3E;
+        }
+        
+        [data-theme="dark"] .profile-info .name-row h2 {
+            color: #EAEAEA;
+        }
+        
+        [data-theme="dark"] .profile-info .profile-meta span {
+            color: #A0A0B0;
+        }
+        
+        [data-theme="dark"] .profile-actions .btn-action {
+            background: #2C2C3E;
+            border-color: #3D3D50;
+            color: #A0A0B0;
+        }
+        
+        [data-theme="dark"] .profile-actions .btn-action:hover {
+            border-color: #DC3545;
+        }
+        
+        [data-theme="dark"] .stat-card-admin {
+            background: #1E1E2E;
+            border-color: #2C2C3E;
+        }
+        
+        [data-theme="dark"] .stat-card-admin .stat-number {
+            color: #EAEAEA;
+        }
+        
+        [data-theme="dark"] .dashboard-card-admin {
+            background: #1E1E2E;
+            border-color: #2C2C3E;
+        }
+        
+        [data-theme="dark"] .dashboard-card-admin .card-header {
+            border-bottom-color: #2C2C3E;
+        }
+        
+        [data-theme="dark"] .dashboard-card-admin .card-header h3 {
+            color: #EAEAEA;
+        }
+        
+        [data-theme="dark"] .dashboard-card-admin table {
+            color: #EAEAEA;
+        }
+        
+        [data-theme="dark"] .dashboard-card-admin th {
+            border-bottom-color: #2C2C3E;
+            color: #A0A0B0;
+        }
+        
+        [data-theme="dark"] .dashboard-card-admin td {
+            border-bottom-color: #2C2C3E;
+            color: #EAEAEA;
+        }
+        
+        [data-theme="dark"] .user-table .user-cell .user-name {
+            color: #EAEAEA;
+        }
+        
+        [data-theme="dark"] .quick-action-admin {
+            background: #2C2C3E;
+        }
+        
+        [data-theme="dark"] .quick-action-admin span {
+            color: #EAEAEA;
+        }
+        
+        [data-theme="dark"] .quick-action-admin:hover {
+            background: rgba(220, 53, 69, 0.1);
+        }
+        
+        [data-theme="dark"] .modal-content {
+            background: #1E1E2E;
+        }
+        
+        [data-theme="dark"] .modal-header {
+            border-bottom-color: #2C2C3E;
+        }
+        
+        [data-theme="dark"] .modal-header h2 {
+            color: #EAEAEA;
+        }
+        
+        [data-theme="dark"] .form-control {
+            background: #2A2A3E;
+            border-color: #3D3D50;
+            color: #EAEAEA;
+        }
+        
+        [data-theme="dark"] .form-control:focus {
+            border-color: #DC3545;
+        }
+        
+        [data-theme="dark"] .modal-footer {
+            border-top-color: #2C2C3E;
+        }
+        
+        [data-theme="dark"] .modal-footer .btn-secondary {
+            background: #2C2C3E;
+            color: #A0A0B0;
+        }
+        
+        [data-theme="dark"] .modal-footer .btn-secondary:hover {
+            background: #3D3D50;
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="dashboard">
-
-    <!-- HEADER -->
-
-    <header>
-
-        <h1>🩸 Admin Dashboard</h1>
-
-        <div style="display: flex; align-items: center; gap: 15px;">
-
-            <button id="refreshBtn">
-                Refresh
+    <!-- ============================================
+    ADMIN NAVBAR
+    ============================================ -->
+    <nav class="admin-navbar">
+        <div class="brand">
+            <span class="blood-icon">🩸</span>
+            Blood <span class="highlight">Need</span>
+            <span class="admin-tag">Admin</span>
+        </div>
+        
+        <!-- Hidden fields for compatibility with admin-dashboard.js -->
+        <span id="headerProfileName" style="display:none;"></span>
+        <span id="headerProfileRole" style="display:none;"></span>
+        
+        <div class="nav-actions">
+            <button class="btn-icon-nav" onclick="showNotifications()" title="Notifications">
+                <i class="fas fa-bell"></i>
+                <span class="badge">0</span>
             </button>
+            <button class="btn-icon-nav" onclick="window.location.href='../index.html'" title="View Site">
+                <i class="fas fa-globe"></i>
+            </button>
+            <button class="btn-icon-nav" id="refreshBtn" title="Refresh">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+        </div>
+    </nav>
 
-            <div class="profile-dropdown-container">
-                <div class="profile-trigger" id="profileTrigger">
-                    <div class="profile-avatar-wrapper">
-                        <i class="fas fa-user-circle"></i>
-                    </div>
-                    <div class="profile-meta">
-                        <span class="profile-name" id="headerProfileName">Loading...</span>
-                        <span class="profile-role" id="headerProfileRole">Admin</span>
-                    </div>
-                    <i class="fas fa-chevron-down"></i>
+    <!-- ============================================
+    MAIN CONTENT
+    ============================================ -->
+    <div class="admin-container">
+
+        <!-- ============================================
+        PROFILE CARD
+        ============================================ -->
+        <div class="profile-card">
+            <div class="profile-avatar-large">
+                <span id="adminInitials">AD</span>
+                <button class="edit-avatar-btn" onclick="openEditProfile()" title="Change avatar">
+                    <i class="fas fa-camera"></i>
+                </button>
+            </div>
+            
+            <div class="profile-info">
+                <div class="name-row">
+                    <h2 id="adminName">Admin User</h2>
+                    <span class="role-badge"><i class="fas fa-shield-alt"></i> Super Admin</span>
                 </div>
-                <div class="profile-dropdown-menu" id="profileDropdownMenu">
-                    <button id="dropdownLogoutBtn" class="dropdown-logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                <div class="profile-meta">
+                    <span id="adminEmail"><i class="fas fa-envelope"></i> admin@bloodneed.com</span>
+                    <span id="adminPhone"><i class="fas fa-phone"></i> +91 99999 99999</span>
+                    <span><i class="fas fa-calendar-alt"></i> Active Member</span>
+                    <span><i class="fas fa-map-marker-alt"></i> Administration</span>
+                </div>
+            </div>
+            
+            <div class="profile-actions">
+                <button class="btn-action edit-btn" onclick="openEditProfile()" title="Edit Profile">
+                    <i class="fas fa-pen"></i>
+                </button>
+                <div class="profile-dropdown-container">
+                    <button class="btn-action" id="profileTrigger" title="Settings">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <div class="profile-dropdown-menu" id="profileDropdownMenu">
+                        <button id="dropdownLogoutBtn" class="dropdown-logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================
+        STATS
+        ============================================ -->
+        <div class="stats-grid-admin" id="summaryCards">
+            Loading summary...
+        </div>
+
+        <!-- ============================================
+        ANALYTICS (COLLAPSIBLE / ACCORDION)
+        ============================================ -->
+        <div class="dashboard-card-admin">
+            <div class="card-header">
+                <h3><i class="fas fa-chart-line"></i> Full Analytics Metrics</h3>
+            </div>
+            <div class="card-body" id="analyticsCards">
+                Loading analytics...
+            </div>
+        </div>
+
+        <!-- ============================================
+        SEARCH
+        ============================================ -->
+        <div class="search-container">
+            <input type="text" id="searchUser" placeholder="Search User...">
+        </div>
+
+        <!-- ============================================
+        DASHBOARD GRID
+        ============================================ -->
+        <div class="dashboard-grid-admin">
+            <!-- Recent Users -->
+            <div class="dashboard-card-admin" style="margin-bottom:0;">
+                <div class="card-header">
+                    <h3><i class="fas fa-users"></i> Recent Registered Users</h3>
+                </div>
+                <div class="card-body" id="usersTable">
+                    Loading users...
                 </div>
             </div>
 
+            <!-- Quick Actions -->
+            <div class="dashboard-card-admin" style="margin-bottom:0;">
+                <div class="card-header">
+                    <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                </div>
+                <div class="quick-actions-admin">
+                    <button class="quick-action-admin" onclick="openEditProfile()">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Edit Profile</span>
+                    </button>
+                    <button class="quick-action-admin" onclick="document.getElementById('donorsSection').scrollIntoView({behavior:'smooth'})">
+                        <i class="fas fa-user-md"></i>
+                        <span>Donors List</span>
+                    </button>
+                    <button class="quick-action-admin" onclick="document.getElementById('patientsSection').scrollIntoView({behavior:'smooth'})">
+                        <i class="fas fa-procedures"></i>
+                        <span>Patients List</span>
+                    </button>
+                    <button class="quick-action-admin" onclick="document.getElementById('requestsSection').scrollIntoView({behavior:'smooth'})">
+                        <i class="fas fa-tasks"></i>
+                        <span>View Requests</span>
+                    </button>
+                    <button class="quick-action-admin" onclick="document.getElementById('reportsSection').scrollIntoView({behavior:'smooth'})">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Reports</span>
+                    </button>
+                    <button class="quick-action-admin" onclick="initializeDashboard()">
+                        <i class="fas fa-sync"></i>
+                        <span>Sync Data</span>
+                    </button>
+                </div>
+            </div>
         </div>
 
-    </header>
-
-
-    <!-- SUMMARY -->
-
-    <section>
-
-        <h2>Dashboard Summary</h2>
-
-        <div
-            id="summaryCards"
-            class="summary-grid">
-
-            Loading...
-
+        <!-- ============================================
+        DONORS SECTION
+        ============================================ -->
+        <div class="dashboard-card-admin" id="donorsSection">
+            <div class="card-header">
+                <h3><i class="fas fa-user-md"></i> Registered Donors</h3>
+            </div>
+            <div class="card-body" id="donorsTable">
+                Loading donors...
+            </div>
         </div>
 
-    </section>
-
-
-    <!-- ANALYTICS -->
-
-    <section>
-
-        <h2>Analytics</h2>
-
-        <div
-            id="analyticsCards"
-            class="summary-grid">
-
-            Loading analytics...
-
+        <!-- ============================================
+        PATIENTS SECTION
+        ============================================ -->
+        <div class="dashboard-card-admin" id="patientsSection">
+            <div class="card-header">
+                <h3><i class="fas fa-procedures"></i> Registered Patients</h3>
+            </div>
+            <div class="card-body" id="patientsTable">
+                Loading patients...
+            </div>
         </div>
 
-    </section>
-
-
-    <!-- SEARCH -->
-
-    <section>
-
-        <input
-            type="text"
-            id="searchUser"
-            placeholder="Search User..."
-        >
-
-    </section>
-
-
-    <!-- USERS -->
-
-    <section>
-
-        <h2>Users</h2>
-
-        <div id="usersTable">
-
-            Loading...
-
+        <!-- ============================================
+        REQUESTS SECTION
+        ============================================ -->
+        <div class="dashboard-card-admin" id="requestsSection">
+            <div class="card-header">
+                <h3><i class="fas fa-hand-holding-heart"></i> Blood Requests</h3>
+            </div>
+            <div class="card-body" id="requestsTable">
+                Loading requests...
+            </div>
         </div>
 
-    </section>
-
-
-    <!-- DONORS -->
-
-    <section>
-
-        <h2>Donors</h2>
-
-        <div id="donorsTable">
-
-            Loading...
-
+        <!-- ============================================
+        DONATIONS SECTION
+        ============================================ -->
+        <div class="dashboard-card-admin" id="donationsSection">
+            <div class="card-header">
+                <h3><i class="fas fa-heart"></i> Donations Log</h3>
+            </div>
+            <div class="card-body" id="donationsTable">
+                Loading donations...
+            </div>
         </div>
 
-    </section>
-
-
-    <!-- PATIENTS -->
-
-    <section>
-
-        <h2>Patients</h2>
-
-        <div id="patientsTable">
-
-            Loading...
-
+        <!-- ============================================
+        MATCHES SECTION
+        ============================================ -->
+        <div class="dashboard-card-admin" id="matchesSection">
+            <div class="card-header">
+                <h3><i class="fas fa-compress-alt"></i> Donor-Request Matches</h3>
+            </div>
+            <div class="card-body" id="matchesTable">
+                Loading matches...
+            </div>
         </div>
 
-    </section>
-
-
-    <!-- BLOOD REQUESTS -->
-
-    <section>
-
-        <h2>Blood Requests</h2>
-
-        <div id="requestsTable">
-
-            Loading...
-
+        <!-- ============================================
+        REPORTS SECTION
+        ============================================ -->
+        <div class="dashboard-card-admin" id="reportsSection">
+            <div class="card-header">
+                <h3><i class="fas fa-chart-bar"></i> Download Spreadsheet Reports</h3>
+            </div>
+            <div class="card-body">
+                <div class="report-buttons">
+                    <button id="downloadDonorReport"><i class="fas fa-file-csv"></i> Download Donor Report</button>
+                    <button id="downloadPatientReport"><i class="fas fa-file-csv"></i> Download Patient Report</button>
+                    <button id="downloadRequestReport"><i class="fas fa-file-csv"></i> Download Request Report</button>
+                    <button id="downloadDonationReport"><i class="fas fa-file-csv"></i> Download Donation Report</button>
+                </div>
+            </div>
         </div>
 
-    </section>
-
-
-    <!-- DONATIONS -->
-
-    <section>
-
-        <h2>Donations</h2>
-
-        <div id="donationsTable">
-
-            Loading...
-
+        <!-- ============================================
+        FOOTER
+        ============================================ -->
+        <div style="text-align:center;color:#6C757D;font-size:0.75rem;padding:2rem 0 0;border-top:1px solid rgba(0,0,0,0.05);margin-top:2rem;">
+            <p>© 2026 Blood Need. All rights reserved. | Admin Dashboard v2.0</p>
         </div>
+    </div>
 
-    </section>
-
-
-    <!-- MATCHES -->
-
-    <section>
-
-        <h2>Donor Matches</h2>
-
-        <div id="matchesTable">
-
-            Loading...
-
+    <!-- ============================================
+    EDIT PROFILE MODAL
+    ============================================ -->
+    <div class="modal-overlay" id="editProfileModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-edit"></i> Edit Profile</h2>
+                <button class="modal-close" onclick="closeEditProfile()">&times;</button>
+            </div>
+            
+            <form id="editProfileForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="editName" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="editEmail" class="form-control" required />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="editPhone" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <input type="text" id="editRole" class="form-control" value="ADMIN" disabled />
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditProfile()">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+                </div>
+            </form>
         </div>
+    </div>
 
-    </section>
+    <!-- ============================================
+    SCRIPTS
+    ============================================ -->
+    <script src="../src/js/admin-dashboard.js?v=5"></script>
 
+    <script>
+        // ============================================
+        // PROFILE MODAL FUNCTIONS
+        // ============================================
+        
+        function openEditProfile() {
+            const userStr = localStorage.getItem("user");
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                document.getElementById('editName').value = user.full_name || '';
+                document.getElementById('editEmail').value = user.email || '';
+                document.getElementById('editPhone').value = user.phone || '';
+            }
+            document.getElementById('editProfileModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeEditProfile() {
+            document.getElementById('editProfileModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Edit Profile Form Submit
+        document.getElementById('editProfileForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('editName').value;
+            const email = document.getElementById('editEmail').value;
+            const phone = document.getElementById('editPhone').value;
+            
+            // Get user object from localStorage
+            const userStr = localStorage.getItem("user");
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                user.full_name = name;
+                user.email = email;
+                user.phone = phone;
+                
+                // Save updated user to localstorage
+                localStorage.setItem("user", JSON.stringify(user));
+                
+                // Update interface
+                document.getElementById('adminName').textContent = name;
+                document.getElementById('adminInitials').textContent = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('adminEmail').innerHTML = `<i class="fas fa-envelope"></i> ${email}`;
+                document.getElementById('adminPhone').innerHTML = `<i class="fas fa-phone"></i> ${phone}`;
+            }
+            
+            alert('✅ Profile updated successfully in session!');
+            closeEditProfile();
+        });
+        
+        // Close modal on overlay click
+        document.getElementById('editProfileModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditProfile();
+            }
+        });
+        
+        // On DOM Content Loaded, fetch data
+        document.addEventListener("DOMContentLoaded", () => {
+            const userStr = localStorage.getItem("user");
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                document.getElementById('adminName').textContent = user.full_name || 'Admin User';
+                document.getElementById('adminInitials').textContent = (user.full_name || 'Admin User').split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('adminEmail').innerHTML = `<i class="fas fa-envelope"></i> ${user.email || 'N/A'}`;
+                document.getElementById('adminPhone').innerHTML = `<i class="fas fa-phone"></i> ${user.phone || 'N/A'}`;
+            }
+        });
 
-    <!-- REPORTS -->
-
-    <section>
-
-        <h2>Reports</h2>
-
-        <div class="report-buttons">
-
-            <button id="downloadDonorReport">
-                Download Donor Report
-            </button>
-
-            <button id="downloadPatientReport">
-                Download Patient Report
-            </button>
-
-            <button id="downloadRequestReport">
-                Download Request Report
-            </button>
-
-            <button id="downloadDonationReport">
-                Download Donation Report
-            </button>
-
-        </div>
-
-    </section>
-
-
-    <!-- FOOTER -->
-
-    <footer>
-
-        Smart Blood Donor Matching & Emergency Response System
-
-    </footer>
-
-</div>
-
-<script src="../src/js/admin-dashboard.js?v=4"></script>
-
+        function showNotifications() {
+            alert('📬 Notification Center: You have 0 unread alerts.');
+        }
+    </script>
 </body>
-
 </html>

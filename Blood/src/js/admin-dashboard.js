@@ -73,52 +73,38 @@ async function loadSummary() {
   const data = await api(`${ADMIN_API_URL}/dashboard`);
 
   document.getElementById("summaryCards").innerHTML = `
-
-<div class="card">
-<h3>Total Users</h3>
-<h1>${data.total_users}</h1>
-</div>
-
-<div class="card">
-<h3>Donors</h3>
-<h1>${data.total_donors}</h1>
-</div>
-
-<div class="card">
-<h3>Patients</h3>
-<h1>${data.total_patients}</h1>
-</div>
-
-<div class="card">
-<h3>Blood Requests</h3>
-<h1>${data.total_requests}</h1>
-</div>
-
-<div class="card">
-<h3>Donations</h3>
-<h1>${data.total_donations}</h1>
-</div>
-
-<div class="card">
-<h3>Pending Requests</h3>
-<h1>${data.pending_requests}</h1>
-</div>
-<div class="card">
-<h3>Matched</h3>
-<h1>${data.matched_requests}</h1>
-</div>
-
-<div class="card">
-<h3>Accepted</h3>
-<h1>${data.accepted_requests}</h1>
-</div>
-
-<div class="card">
-<h3>Completed</h3>
-<h1>${data.completed_requests}</h1>
-</div>
-
-`;
+    <div class="stat-card-admin">
+        <div class="stat-header">
+            <span class="stat-label">Total Users</span>
+            <span class="stat-icon blue"><i class="fas fa-users"></i></span>
+        </div>
+        <span class="stat-number">${data.total_users}</span>
+    </div>
+    
+    <div class="stat-card-admin">
+        <div class="stat-header">
+            <span class="stat-label">Donors</span>
+            <span class="stat-icon red"><i class="fas fa-user-md"></i></span>
+        </div>
+        <span class="stat-number">${data.total_donors}</span>
+    </div>
+    
+    <div class="stat-card-admin">
+        <div class="stat-header">
+            <span class="stat-label">Blood Requests</span>
+            <span class="stat-icon gold"><i class="fas fa-hand-holding-heart"></i></span>
+        </div>
+        <span class="stat-number">${data.total_requests}</span>
+    </div>
+    
+    <div class="stat-card-admin">
+        <div class="stat-header">
+            <span class="stat-label">Lives Saved / Donations</span>
+            <span class="stat-icon green"><i class="fas fa-heart"></i></span>
+        </div>
+        <span class="stat-number">${data.total_donations}</span>
+    </div>
+  `;
 }
 
 // ================================
@@ -129,63 +115,51 @@ async function loadUsers() {
   const users = await api(`${ADMIN_API_URL}/users`);
 
   let html = `
-
-<table>
-
-<tr>
-
-<th>ID</th>
-<th>Name</th>
-<th>Email</th>
-<th>Role</th>
-<th>Status</th>
-<th>Actions</th>
-
-</tr>
-
-`;
+    <table class="user-table">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th style="text-align:right;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+  `;
 
   users.forEach((user) => {
+    const initials = user.full_name ? user.full_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : 'U';
+    const typeClass = user.role.toLowerCase();
+    
     html += `
-
-<tr>
-
-<td>${user.user_id}</td>
-
-<td>${user.full_name}</td>
-
-<td>${user.email}</td>
-
-<td>${user.role}</td>
-
-<td>${user.active ? "Active" : "Blocked"}</td>
-
-<td>
-
-<button
-class="${user.active ? "block-btn" : "unblock-btn"}"
-onclick="toggleUser(${user.user_id},${user.active})">
-
-${user.active ? "Block" : "Unblock"}
-
-</button>
-
-<button
-class="delete-btn"
-onclick="deleteUser(${user.user_id})">
-
-Delete
-
-</button>
-
-</td>
-
-</tr>
-
-`;
+        <tr>
+            <td>
+                <div class="user-cell">
+                    <div class="avatar-sm">${initials}</div>
+                    <div>
+                        <div class="user-name">${user.full_name || 'N/A'}</div>
+                        <div class="user-email">${user.email}</div>
+                    </div>
+                </div>
+            </td>
+            <td><span class="type-tag ${typeClass}">${user.role}</span></td>
+            <td><span class="status-badge-sm ${user.active ? 'active' : 'blocked'}">${user.active ? 'Active' : 'Blocked'}</span></td>
+            <td style="text-align:right;">
+                <button class="action-btn edit" onclick="toggleUser(${user.user_id}, ${user.active})" title="${user.active ? 'Block' : 'Unblock'}">
+                    <i class="fas ${user.active ? 'fa-ban' : 'fa-check'}"></i>
+                </button>
+                <button class="action-btn delete" onclick="deleteUser(${user.user_id})" title="Delete">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+    `;
   });
 
-  html += "</table>";
+  html += `
+        </tbody>
+    </table>
+  `;
 
   document.getElementById("usersTable").innerHTML = html;
 }
