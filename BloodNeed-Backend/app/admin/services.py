@@ -126,15 +126,18 @@ def get_all_matches():
 # ====================================================
 
 def delete_blood_request(request_id):
+    from app.models.hospital_transfer import HospitalTransfer
 
     blood_request = BloodRequest.query.get(request_id)
-
     if blood_request is None:
         return False
 
+    DonorMatch.query.filter_by(request_id=request_id).delete()
+    Donation.query.filter_by(request_id=request_id).delete()
+    HospitalTransfer.query.filter_by(request_id=request_id).delete()
+
     db.session.delete(blood_request)
     db.session.commit()
-
     return True
 
 
@@ -143,15 +146,24 @@ def delete_blood_request(request_id):
 # ====================================================
 
 def delete_donor(donor_id):
+    from app.models.badge import Badge
+    from app.models.reward_point import RewardPoint
+    from app.models.feedback import Feedback
+    from app.models.response_history import ResponseHistory
 
     donor = Donor.query.get(donor_id)
-
     if donor is None:
         return False
 
+    DonorMatch.query.filter_by(donor_id=donor_id).delete()
+    Donation.query.filter_by(donor_id=donor_id).delete()
+    Badge.query.filter_by(donor_id=donor_id).delete()
+    RewardPoint.query.filter_by(donor_id=donor_id).delete()
+    Feedback.query.filter_by(donor_id=donor_id).delete()
+    ResponseHistory.query.filter_by(donor_id=donor_id).delete()
+
     db.session.delete(donor)
     db.session.commit()
-
     return True
 
 
@@ -160,15 +172,24 @@ def delete_donor(donor_id):
 # ====================================================
 
 def delete_patient(patient_id):
+    from app.models.feedback import Feedback
+    from app.models.hospital_transfer import HospitalTransfer
 
     patient = Patient.query.get(patient_id)
-
     if patient is None:
         return False
 
+    requests = BloodRequest.query.filter_by(patient_id=patient_id).all()
+    for req in requests:
+        DonorMatch.query.filter_by(request_id=req.request_id).delete()
+        Donation.query.filter_by(request_id=req.request_id).delete()
+        HospitalTransfer.query.filter_by(request_id=req.request_id).delete()
+        db.session.delete(req)
+
+    Feedback.query.filter_by(patient_id=patient_id).delete()
+
     db.session.delete(patient)
     db.session.commit()
-
     return True
 
 
@@ -177,15 +198,63 @@ def delete_patient(patient_id):
 # ====================================================
 
 def delete_user(user_id):
+    from app.models.badge import Badge
+    from app.models.reward_point import RewardPoint
+    from app.models.feedback import Feedback
+    from app.models.response_history import ResponseHistory
+    from app.models.email_verification import EmailVerification
+    from app.models.password_reset import PasswordReset
+    from app.models.hospital import Hospital
+    from app.models.blood_inventory import BloodInventory, BloodInventoryTransaction
+    from app.models.hospital_transfer import HospitalTransfer
 
     user = User.query.get(user_id)
-
     if user is None:
         return False
 
+    # 1. Clean up Donor-specific records
+    donor = Donor.query.filter_by(user_id=user_id).first()
+    if donor:
+        DonorMatch.query.filter_by(donor_id=donor.donor_id).delete()
+        Donation.query.filter_by(donor_id=donor.donor_id).delete()
+        Badge.query.filter_by(donor_id=donor.donor_id).delete()
+        RewardPoint.query.filter_by(donor_id=donor.donor_id).delete()
+        Feedback.query.filter_by(donor_id=donor.donor_id).delete()
+        ResponseHistory.query.filter_by(donor_id=donor.donor_id).delete()
+        db.session.delete(donor)
+
+    # 2. Clean up Patient-specific records
+    patient = Patient.query.filter_by(user_id=user_id).first()
+    if patient:
+        requests = BloodRequest.query.filter_by(patient_id=patient.patient_id).all()
+        for req in requests:
+            DonorMatch.query.filter_by(request_id=req.request_id).delete()
+            Donation.query.filter_by(request_id=req.request_id).delete()
+            HospitalTransfer.query.filter_by(request_id=req.request_id).delete()
+            db.session.delete(req)
+        Feedback.query.filter_by(patient_id=patient.patient_id).delete()
+        db.session.delete(patient)
+
+    # 3. Clean up Hospital-specific records
+    hospital = Hospital.query.filter_by(user_id=user_id).first()
+    if hospital:
+        HospitalTransfer.query.filter((HospitalTransfer.source_hospital_id == hospital.hospital_id) | (HospitalTransfer.target_hospital_id == hospital.hospital_id)).delete()
+        BloodInventoryTransaction.query.filter_by(hospital_id=hospital.hospital_id).delete()
+        BloodInventory.query.filter_by(hospital_id=hospital.hospital_id).delete()
+        requests = BloodRequest.query.filter_by(hospital_name=hospital.hospital_name).all()
+        for req in requests:
+            DonorMatch.query.filter_by(request_id=req.request_id).delete()
+            Donation.query.filter_by(request_id=req.request_id).delete()
+            HospitalTransfer.query.filter_by(request_id=req.request_id).delete()
+            db.session.delete(req)
+        db.session.delete(hospital)
+
+    # 4. Clean up generic user records
+    EmailVerification.query.filter_by(user_id=user_id).delete()
+    PasswordReset.query.filter_by(email=user.email).delete()
+
     db.session.delete(user)
     db.session.commit()
-
     return True
 
 
