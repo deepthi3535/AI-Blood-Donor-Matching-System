@@ -1945,3 +1945,216 @@
     color: var(--navy, #1a1a2e);
     font-weight: 700;
 }
+
+/* ==========================================================================
+   ADMIN DASHBOARD STYLES
+   ========================================================================== */
+.dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.dashboard header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: var(--shadow, 0 4px 12px rgba(0,0,0,0.05));
+    margin-bottom: 30px;
+    border: 1px solid var(--border-color, #e0e0e0);
+}
+
+.dashboard header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--navy, #1a1a2e);
+    margin: 0;
+}
+
+#refreshBtn {
+    background: var(--navy, #1a1a2e);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition, 0.3s ease);
+}
+
+#refreshBtn:hover {
+    background: var(--primary-red, #d9534f);
+}
+
+.dashboard section {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: var(--shadow, 0 4px 12px rgba(0,0,0,0.05));
+    margin-bottom: 30px;
+    border: 1px solid var(--border-color, #e0e0e0);
+}
+
+.dashboard section h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--navy, #1a1a2e);
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--primary-light, #fdf2f2);
+    padding-bottom: 10px;
+}
+
+/* Summary and Analytics Grids */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.summary-grid .card {
+    background: var(--primary-light, #fdf2f2);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid var(--border-color, #e0e0e0);
+    transition: var(--transition, 0.3s ease);
+}
+
+.summary-grid .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.summary-grid .card h3 {
+    font-size: 0.85rem;
+    color: var(--secondary-gray, #777);
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.summary-grid .card h1 {
+    font-size: 2rem;
+    color: var(--primary-red, #d9534f);
+    margin: 0;
+    font-weight: 700;
+}
+
+/* User Search */
+#searchUser {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color, #e0e0e0);
+    font-size: 0.95rem;
+    transition: var(--transition, 0.3s ease);
+    outline: none;
+}
+
+#searchUser:focus {
+    border-color: var(--primary-red, #d9534f);
+    box-shadow: 0 0 0 3px rgba(217, 83, 79, 0.15);
+}
+
+/* Data Tables */
+.dashboard table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 0.95rem;
+}
+
+.dashboard th {
+    background: var(--primary-light, #fdf2f2);
+    color: var(--navy, #1a1a2e);
+    text-align: left;
+    padding: 14px 16px;
+    font-weight: 700;
+    border-bottom: 2px solid var(--border-color, #e0e0e0);
+}
+
+.dashboard td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color, #e0e0e0);
+    color: #333;
+}
+
+.dashboard tr:hover td {
+    background-color: rgba(0, 0, 0, 0.01);
+}
+
+/* Action Buttons inside tables */
+.dashboard table button {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: var(--transition, 0.3s ease);
+    margin-right: 5px;
+}
+
+.block-btn {
+    background: #f0ad4e;
+    color: white;
+}
+
+.block-btn:hover {
+    background: #ec971f;
+}
+
+.unblock-btn {
+    background: #5cb85c;
+    color: white;
+}
+
+.unblock-btn:hover {
+    background: #449d44;
+}
+
+.delete-btn {
+    background: var(--primary-red, #d9534f);
+    color: white;
+}
+
+.delete-btn:hover {
+    background: #c9302c;
+}
+
+/* Reports */
+.report-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.report-buttons button {
+    background: white;
+    color: var(--navy, #1a1a2e);
+    border: 1px solid var(--border-color, #e0e0e0);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition, 0.3s ease);
+}
+
+.report-buttons button:hover {
+    background: var(--navy, #1a1a2e);
+    color: white;
+    border-color: var(--navy, #1a1a2e);
+}
+
+.dashboard footer {
+    text-align: center;
+    color: var(--secondary-gray, #777);
+    font-size: 0.85rem;
+    padding: 20px 0;
+    margin-top: 20px;
+}
